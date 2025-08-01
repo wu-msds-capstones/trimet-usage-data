@@ -1,1 +1,62 @@
+```{r echo=FALSE, include=FALSE} 
+library(tidyverse)
+```
+
+```{r, echo=F, message=F}
+stop_features = read_csv('data/stop_features.csv')
+```
+
+
+
 # Background
+
+Recent studies specific to Portland public transit include investigating effects of COVID on public transit demand, effects of public transit on physical activity, effects on ridesharing and biking, effects on employment, equity-advancing practices, and more. However, this study focuses specifically on TriMet and the qualities and features of TriMet stops. Therefore, any similar previous studies have likely been done by TriMet themselves. Our research is certainly not more in-depth than TriMet’s, since they have easier access to their own data. We hope to provide a publicly available inquiry into TriMet’s data.
+
+# Ethical Considerations 
+
+Access to public transit can lead to difficult ethical considerations. Neighborhoods with historically underprivileged populations are often the ones that rely most on public transit, but are also those that are least likely to receive transit stations within a usable distance. 
+The idea of what counts as a "usable distance" is itself a difficult question to answer ethically. This can even vary for the same person over time–walking for 10 minutes on the way to work might be a nice part of the commute, even in the rain, but becomes a slog when hauling luggage to the airport. A distance that takes one person ten minutes to walk may take someone else a half hour, and they have no energy to do errands once they've arrived at the bus stop. These are not easy considerations to make, and yet they are crucial ones. Transit centers can get around this issue somewhat by providing parking, but that still requires someone to have a car in order to get to the transit center to take a transit route–or requires having a larger number of local transit routes that feed into the transit center from the surrounding area. 
+These are only a few of the ethical considerations that must go into designing a transit system, and yet those listed so far are outside the scope of this project. We do have one variable, however, that may raise a few ethical questions: the average number of minutes between arrival times at a station. Boxplots are provided for this variable, separated by station type in the TriMet system, in Figure 1. A zoomed-in version of these plots is provided in Figure 2. 
+
+```{r, echo=F}
+#| fig-cap: "Figure 1: Boxplots showing the average number of minutes between arrivals at a station, faceted by each station type. Data from both weekdays and weekend days is included."
+ggplot(data=stop_features, aes(x=arrival_diff, fill=stop_type)) + 
+  geom_boxplot() +
+  theme_bw()+ 
+  labs(
+    title='Average Difference between Arrival Times, by Station Type', 
+    legend.title='Station Type', 
+    x='Average Number of Minutes between Arrivals', 
+    caption='Data from Trimet', 
+    fill='Station Type'
+  ) + 
+  theme(
+    axis.text.y = element_blank(), 
+    axis.ticks.y = element_blank()
+  ) +
+  scale_fill_manual(values=c('cornflowerblue', 'orange', 'blue3'))
+```
+
+```{r, echo=F, warning=FALSE, message=F}
+#| fig-cap: 'Figure 2: Boxplots showing the average number of minutes between arrivals at a station, faceted by each station type. Data from both weekdays and weekend days is included. Outliers higher than 100 are excluded for a better view of the non-outlier data.'
+ggplot(data=stop_features, aes(x=arrival_diff, fill=stop_type)) + 
+  geom_boxplot() +
+  xlim(0, 100) + 
+  theme_bw()+ 
+  labs(
+    title='Average Difference between Arrival Times, by Station Type', 
+    legend.title='Station Type', 
+    x='Average Number of Minutes between Arrivals', 
+    caption='Data from Trimet', 
+    fill='Station Type'
+  ) + 
+  theme(
+    axis.text.y = element_blank(), 
+    axis.ticks.y = element_blank()
+  ) +
+  scale_fill_manual(values=c('cornflowerblue', 'orange', 'blue3'))
+```
+
+This variable was calculated by collecting all the arrivals at a station and averaging the differences between them, so stops that are only active during a certain time of day are penalized by that. For example, the WES trains only run during rush hour, with a large gap in the middle of the day, so there is one artificially large value. Overall, however, most routes run consistently throughout the day and the values shown should be reflective of standing at a station waiting for a transit line to arrive as scheduled. 
+Consider how long you would be willing to stand at a transit station waiting if you watched the previous vehicle stop at the station from across the street and leave without you on it. It's likely you picked about 20 minutes. However, it can be seen in Figure X that only the MAX lines run every 15-20 minutes regularly, and that only half of the buses by quartile are 25 minutes or less. The third quartile of the bus stations goes up over 60 minutes. More than an hour is a long time to wait at a transit stop. 
+This illustrates just one of many ethical considerations that must be taken into account when designing a transit system–or even simply running one, as TriMet is doing. 

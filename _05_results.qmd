@@ -1,1 +1,276 @@
+```{r echo=FALSE, include=F} 
+library(tidyverse)
+library(cowplot)
+```
+
+```{r, echo=F, include=F}
+full_model = read_csv('data/full.csv')
+max_model = read_csv('data/max.csv')
+low_model = read_csv('data/low.csv')
+med_model = read_csv('data/med.csv')
+high_model = read_csv('data/high.csv')
+```
+
+
 # Results
+
+## Statistical Modeling 
+
+We first created a model with all of our available features: Number of routes, number of arrivals, earliest arrival, latest arrival, average arrival difference, and day. The summary of the model shows that many of these features have negligible effects on the response variable. Since the poisson regression logs the data by default, we take the exponent of our summary statistics to interpret the data. The most salient feature was day, which tells us that usage can be expected to drop by around 8% on weekends. 
+
+Another model uses only the number of routes feature. This performed only slightly better. The summary shows that with each additional route to a particular station, we can expect the usage to increase by roughly 50%. However, after checking the validity of this through exploratory data analysis, we aren’t confident in the model’s accuracy. The majority of stations have less than five routes and the highest usage numbers are recorded there. 
+
+
+## Machine Learning 
+
+The first model of interest to this paper is the random forest trained on the entire dataset with no segmentation. The full results of this model are shown in Figure 6, and a zoomed-in version is available in Figure 7. This model had an RMSE value of 79.74, which normalized to 0.0395, and an R^2 value during training of 0.3864.
+
+```{r, echo=F}
+#| fig-cap: 'Figure 6: Predicted values vs test values for the random forest model trained on the full PCA dataset, as well as the residuals. This model had an RMSE value of 79.74, but the shape of the residuals shows it is not a good model. '
+pca_plot = ggplot() + 
+  geom_point(aes(x=full_model$total_usage, y=full_model$pca_pred, alpha=0.5)) + 
+  geom_line(aes(x=full_model$total_usage, y=full_model$total_usage), colour='blue') + 
+  #xlab('real')+ 
+  #ylab('predicted') + 
+  theme_bw() + 
+  labs(
+    title = 'Predicted vs Test Usages',
+    subtitle = 'Full Dataset, with PCA', 
+    x = 'Test Usage', 
+    y = 'Predicted Usage', 
+    #caption = 'Data from Trimet'
+  ) + 
+  theme(
+    legend.position='none'
+  )
+
+pca_resid = ggplot() + 
+  geom_point(aes(x=full_model$total_usage, y = full_model$total_usage - full_model$pca_pred), alpha=0.5) + 
+  geom_hline(aes(yintercept = 0), color='blue') + 
+  theme_bw() + 
+  labs(
+    title = 'Residuals of Regression using PCA', 
+    subtitle = 'Full Dataset', 
+    x = 'Test Usage', 
+    y = 'Residual (predicted - test)', 
+    #caption = 'Data from Trimet'
+  ) 
+
+plot_grid(pca_plot, pca_resid ,nrow=1) +
+  facet_grid() +
+  theme_minimal()
+```
+
+```{r, echo=F, , warning=FALSE, message=F}
+#| fig-cap: 'Figure 7: Predicted values vs test values for the random forest model trained on the full PCA dataset, as well as the residuals, limited to usage values between 0 and 100. This is a crop of Figure 6 for clarity of image. '
+pca_plot = ggplot() + 
+  geom_point(aes(x=full_model$total_usage, y=full_model$pca_pred, alpha=0.5)) + 
+  geom_line(aes(x=full_model$total_usage, y=full_model$total_usage), colour='blue') + 
+  xlab('real')+ 
+  ylab('predicted') + 
+  xlim(0, 100) + 
+  ylim(0, 450) +
+  theme(
+    legend.position='none'
+  ) +
+  theme_bw() + 
+  labs(
+    title = 'Predicted vs Test Usages',
+    subtitle = 'Full Dataset, with PCA', 
+    x = 'Test Usage', 
+    y = 'Predicted Usage', 
+    #caption = 'Data from Trimet'
+  ) + 
+  theme(
+    legend.position='none'
+  )
+
+pca_resid = ggplot() + 
+  geom_point(aes(x=full_model$total_usage, y = full_model$total_usage - full_model$pca_pred), alpha=0.5) + 
+  geom_hline(aes(yintercept = 0), color='blue') + 
+  xlim(0,100) + 
+  ylim(-300, 105) + 
+  theme_bw() + 
+  labs(
+    title = 'Residuals of Regression using PCA', 
+    subtitle = 'Full Dataset', 
+    x = 'Test Usage', 
+    y = 'Residual (predicted - test)', 
+    caption = 'Data from Trimet'
+  ) 
+
+plot_grid(pca_plot, pca_resid ,nrow=1) +
+  facet_grid() +
+  theme_minimal()
+```
+
+
+Given the low metrics of the model trained on the full dataset, the next step in this analysis was to run the same model on each section of the dataset: MAX stations and usage-segmented bus stations. 
+The results of the random forest trained on MAX station data are illustrated in Figure 8. This model had a test RMSE of 378.91, which normalizes to 0.188. The R^2 value during training of this model was 0.207.  Surprisingly, this model performed worse than the full-data model, despite having a better distribution of usage data. This is likely because MAX stations are a minority in the dataset and thus the model does not have a large number of values to work with.
+
+```{r, echo=F}
+#| fig-cap: 'Figure 8: Predicted values vs test values for the random forest model trained on the MAX PCA dataset, as well as the residuals. This model had an RMSE value of 378.91. '
+max_plot = ggplot() + 
+  geom_point(aes(x=max_model$total_usage, y=max_model$max_pred, alpha=0.5)) + 
+  geom_line(aes(x=max_model$total_usage, y=max_model$total_usage), colour='orange') + 
+  xlab('real')+ 
+  ylab('predicted') + 
+  theme(
+    legend.position='none'
+  ) + 
+  theme_bw() + 
+  labs(
+    title = 'Predicted vs Test Usages',
+    subtitle = 'Max Stations, with PCA', 
+    x = 'Test Usage', 
+    y = 'Predicted Usage', 
+    caption = 'Data from Trimet'
+  ) + 
+  theme(
+    legend.position='none'
+  )
+
+max_resid = ggplot() + 
+  geom_point(aes(x=max_model$total_usage, y = max_model$total_usage - max_model$max_pred), alpha=0.5) + 
+  geom_hline(aes(yintercept = 0), color='orange') + 
+  theme_bw() + 
+  labs(
+    title = 'Residuals of Regression using PCA', 
+    subtitle = 'MAX Stations', 
+    x = 'Test Usage', 
+    y = 'Residual (predicted - test)', 
+    caption = 'Data from Trimet'
+  ) 
+
+plot_grid(max_plot, max_resid) +
+  facet_grid() +
+  theme_minimal()
+```
+
+Finally were the three models trained on bus station data. The WES train stations are included in these models, since there are only six WES stations in the TriMet system and the usage numbers aligned with those of the bus stations. 
+
+The results of the random forest trained on low-usage stations is illustrated in Figure 9. This model had a test RMSE of 5.965, which normalizes to 0.202. It had an R^2 value during testing of 0.313. This model contains the majority of the data in this dataset, and so it is not surprising that it closely reflects the results of the model trained on the full dataset. However, it is still not particularly accurate, as can be seen in the graphs in Figure X–specifically the residuals graph. 
+
+```{r, echo=F}
+#| fig-cap: 'Figure 9: Predicted values vs test values for the random forest model trained on the low-usage bus PCA dataset, as well as the residuals. This model had an RMSE value of 5.965. '
+low_plot = ggplot() + 
+  geom_point(aes(x=low_model$total_usage, y=low_model$low_pred, alpha=0.5)) + 
+  geom_line(aes(x=low_model$total_usage, y=low_model$total_usage), colour='#00BA38') + 
+  xlab('real')+ 
+  ylab('predicted') + 
+  theme(
+    legend.position='none'
+  ) + 
+  theme_bw() + 
+  labs(
+    title = 'Predicted vs Test Usages',
+    subtitle = 'Low-Usage Bus Stations, with PCA', 
+    x = 'Test Usage', 
+    y = 'Predicted Usage', 
+    caption = 'Data from Trimet'
+  ) + 
+  theme(
+    legend.position='none'
+  )
+
+low_resid = ggplot() + 
+  geom_point(aes(x=low_model$total_usage, y = low_model$total_usage - low_model$low_pred), alpha=0.5) + 
+  geom_hline(aes(yintercept = 0), color='#00BA38') + 
+  theme_bw() + 
+  labs(
+    title = 'Residuals of Regression using PCA', 
+    subtitle = 'Low-Usage Bus Stations', 
+    x = 'Test Usage', 
+    y = 'Residual (predicted - test)', 
+    caption = 'Data from Trimet'
+  ) 
+
+plot_grid(low_plot, low_resid) +
+  facet_grid() +
+  theme_minimal()
+```
+
+The model trained on medium-usage bus stations suffers in the same way the model for MAX stations does: the majority of the dataset is low-usage stations, leaving a much smaller dataset for the medium-usage model. The results of this model are illustrated in Figure 10. It had a test RMSE of 47.797, which normalizes to 0.177. The R^2 value of this model during testing was 0.085, which is the worst so far. This performance is represented in Figure X, particularly in the shape of the residuals. 
+
+```{r, echo=F}
+#| fig-cap: 'Figure 10: Predicted values vs test values for the random forest model trained on the medium-usage bus PCA dataset, as well as the residuals. This model had an RMSE value of 47.797. '
+med_plot = ggplot() + 
+  geom_point(aes(x=med_model$total_usage, y=med_model$med_pred, alpha=0.5)) + 
+  geom_line(aes(x=med_model$total_usage, y=med_model$total_usage), colour='#619CFF') + 
+  xlab('real')+ 
+  ylab('predicted') + 
+  theme(
+    legend.position='none'
+  ) + 
+  theme_bw() + 
+  labs(
+    title = 'Predicted vs Test Usages',
+    subtitle = 'Medium-Usage Bus Stations, with PCA', 
+    x = 'Test Usage', 
+    y = 'Predicted Usage', 
+    caption = 'Data from Trimet'
+  ) + 
+  theme(
+    legend.position='none'
+  )
+
+med_resid = ggplot() + 
+  geom_point(aes(x=med_model$total_usage, y = med_model$total_usage - med_model$med_pred), alpha=0.5) + 
+  geom_hline(aes(yintercept = 0), color='#619CFF') + 
+  theme_bw() + 
+  labs(
+    title = 'Residuals of Regression using PCA', 
+    subtitle = 'Medium-Usage Bus Stations', 
+    x = 'Test Usage', 
+    y = 'Residual (predicted - test)', 
+    caption = 'Data from Trimet'
+  ) 
+
+plot_grid(med_plot, med_resid) +
+  facet_grid() +
+  theme_minimal()
+```
+
+While it felt incomplete to exclude the high-usage stations from our project, the very small percentage of data points in this category is once again reflected in the performance of the model trained on the high-usage bus station data. These results are illustrated in Figure 11. This model had a test RMSE of 195.85, which normalizes to 0.898. This model had an R^2 value of 0.2326 during testing. While these metrics are relatively good compared to the other models constructed for this analysis, they are not particularly generalizable or actionable, given the incredibly small amount of data that produced this regression. 
+
+```{r, echo=F}
+#| fig-cap: 'Figure 11: Predicted values vs test values for the random forest model trained on the high-usage bus PCA dataset, as well as the residuals. This model had an RMSE value of 195.85. Note the very low number of datapoints, which makes this model a poor generalization. '
+high_plot = ggplot() + 
+  geom_point(aes(x=high_model$total_usage, y=high_model$high_pred, alpha=0.5)) + 
+  geom_line(aes(x=high_model$total_usage, y=high_model$total_usage), colour='#F8766D') + 
+  xlab('real')+ 
+  ylab('predicted') + 
+  theme(
+    legend.position='none'
+  ) + 
+  theme_bw() + 
+  labs(
+    title = 'Predicted vs Test Usages',
+    subtitle = 'High-Usage Bus Stations', 
+    x = 'Test Usage', 
+    y = 'Predicted Usage', 
+    caption = 'Data from Trimet'
+  ) + 
+  theme(
+    legend.position='none'
+  )
+
+high_resid = ggplot() + 
+  geom_point(aes(x=high_model$total_usage, y = high_model$total_usage - high_model$high_pred), alpha=0.5) + 
+  geom_hline(aes(yintercept = 0), color='#F8766D') + 
+  theme_bw() + 
+  labs(
+    title = 'Residuals of Regression', 
+    subtitle = 'High-Usage Bus Stations', 
+    x = 'Test Usage', 
+    y = 'Residual (predicted - test)', 
+    caption = 'Data from Trimet'
+  ) 
+
+plot_grid(high_plot, high_resid) +
+  facet_grid() +
+  theme_minimal()
+```
+
+Overall, the model trained on the full dataset performed the best.  The best in this case, however, was an R^2 value of 0.3–which is not very high, and thus these models cannot be considered highly predictive models. The best they're doing is making it into the neighborhood, with RMSE values typically similar to the mean value of usage for each dataset. 
+Interestingly, each bus model has visually similar results to the chunk of the full model that each model covers. This suggests that the full model's accuracy is driven mainly by the low-usage bus data, which is to be expected: the low-usage bus data is the majority of data available in the dataset. 

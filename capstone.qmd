@@ -1,9 +1,9 @@
 ---
-title: "Capstone Project"
-subtitle: Subtitle
+title: "Trimet Usage Data: the Impact of Schedule on Usage"
+subtitle: 'Willamette MSDS Capstone Project 2025'
 authors:
-  - Bob
-  - Jane
+  - Kaiden Elam
+  - Denton Kunz
 bibliography: references.bib
 title-block-banner: true
 format: 
