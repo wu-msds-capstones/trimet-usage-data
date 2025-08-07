@@ -1,17 +1,197 @@
+
+```{r, echo=F, include=F}
+library(tidyverse) 
+library(tidycensus)
+library(sf)
+library(tigris)
+library(maps)
+library(tmap)
+#install.packages('ggnewscale')
+library(ggnewscale)
+#install.packages("colorspace")
+library(colorspace)
+```
+
+```{r, echo=F, include=F}
+stops = read_csv('stop_features.csv')
+stop_locations = read_csv('data/stop_features_locations.csv')
+```
+
+```{r, echo=F}
+high_max = stops %>% filter(day == 0) %>% filter(stop_type == 'MAX Station') %>% arrange(desc(total_usage)) %>% head(5)
+#high_max
+```
+
+
+```{r, echo=F}
+high_max_lat = data.frame('lat'=c(45.530269, 45.435721, 45.519253, 45.587584, 45.530057))
+high_max_lon = data.frame('long'=c(-122.563578, -122.567769, -122.679475, -122.5931, -122.664917))
+high_max = high_max %>% cbind(high_max_lat, high_max_lon)
+```
+
+
+```{r, echo=F}
+high_bus = stops %>% filter(day == 0) %>% filter(stop_type == 'Bus Station') %>% arrange(desc(total_usage)) %>% head(5)
+#high_bus
+```
+
+```{r, echo=F}
+high_bus_lat = data.frame('lat'=c(45.490746, 45.437504, 45.49093, 45.435666, 45.5299))
+high_bus_lon = data.frame('long'=c(-122.801309, -122.574003, -122.801741, -122.568707, -122.563177))
+high_bus = high_bus %>% cbind(high_bus_lat, high_bus_lon)
+```
+
+
+```{r, echo=F}
+low_max = stops %>%
+  filter(total_usage > 0) %>% filter(stop_type == 'MAX Station') %>% filter(day == 0) %>%
+  arrange(total_usage) %>% head(5)
+#low_max
+```
+
+```{r, echo=F}
+low_max_lat = data.frame('lat'=c(45.510483, 45.430321, 45.474312, 45.468462, 45.474182))
+low_max_lon = data.frame('long'=c(-122.7173, -122.635561, -122.640158, -122.567216, -122.63978))
+low_max = low_max %>% cbind(low_max_lat, low_max_lon)
+```
+
+```{r, echo=F}
+low_bus = stops %>%
+  filter(total_usage > 0) %>% filter(stop_type == 'Bus Station') %>% 
+  arrange(total_usage) %>% head(5)
+#low_bus
+```
+
+```{r, echo=F}
+low_bus_lat = data.frame('lat'=c(45.470914, 45.585828, 45.589606, 45.589573, 45.599807))
+low_bus_lon = data.frame('long'=c(-122.693601, -122.706898, -122.680115, -122.683481, -122.676919))
+low_bus = low_bus %>% cbind(low_bus_lat, low_bus_lon)
+```
+
+```{r, echo=F}
+max_usage = rbind(high_max, low_max) %>% 
+  select(stop_id, stop_name, total_usage, lat, long) %>% 
+  filter(stop_name != 'Gateway/NE 99th Ave TC MAX Station')
+  #mutate(long = abs(long))
+bus_usage = rbind(high_bus, low_bus) %>% 
+  select(stop_id, stop_name, total_usage, lat, long) #%>% 
+  #mutate(long = abs(long))
+```
+
+```{r, echo=F, include=F}
+orwa <- rbind_tigris(
+  tracts("OR", cb = TRUE), 
+  tracts("WA", cb = TRUE)
+)
+```
+
+
+```{r echo=FALSE, include=F}
+census_api_key("b68945413daec2c8b9c203e226f58f5fa9eaa6f5", overwrite=TRUE)
+```
+
+```{r, echo=F, include=F}
+mult_pop <- get_acs(geography = "tract", 
+               state = "OR", county = "Multnomah",
+               variables = "B02001_001", 
+               geometry = TRUE)
+
+wa_pop = get_acs(geography = "tract", 
+               state = "OR", county = "Washington",
+               variables = "B02001_001", 
+               geometry = TRUE)
+
+clack_pop = get_acs(geography = "tract", 
+               state = "OR", county = "Clackamas",
+               variables = "B02001_001", 
+               geometry = TRUE)
+
+pdx_pop = rbind(mult_pop, wa_pop, clack_pop)
+
+pdx_pop_gg = orwa %>% st_join(pdx_pop)
+```
+
 # Conclusions
 
 Over the course of this project, we went through the data collection and engineering process as well as modeling usage using statistical and machine learning-based regressions. Two types of data were collected from the TriMet website: usage information by station for Spring 2025, and schedule information for each station. These values were uploaded into a database, as well as transformed into a number of features for use in predicting the usage value of a station. 
 
 We experimented with multiple Poisson regression models, but ultimately weren’t able to generate accurate predictions. Plotting usage against predicted usage shows a scatterplot of points randomly spread on either side of the y=x diagonal line. Additionally, the summary of the model shows that each variable has negligible effects on usage. It’s possible that a different statistical model should be used, but more likely that the features we created are simply not good predictors of usage.
 
-A number of random forest models were used to predict usage, at a number of scales. Usage was predicted over the full dataset, as well as for several categories: MAX stations, low-usage bus stations, medium-usage bus stations, and high-usage bus stations. Of these models, the one trained on the full dataset had the highest metrics, with an R^2 value during training of [FINAL VALUE]. The models trained on smaller proportions of the dataset performed worse than this full model, while the low-usage bus station model was comparable, due to its status as containing the majority of the data in the dataset. However, with a test RMSE value of [80-ISH, GET FINAL VALUE], even the highest-performing model does not make a good predictor for a dataset with a mean of 30. 
+[TALK ABOUT THE MACHINE LEARNING MODELS]
 
 ## Future Work 
 
-In some ways, the fact that schedule information alone is not particularly predictive of usage is not a surprising discovery. Future work done on this problem would benefit highly from the inclusion of location data for each station stop, which was unfortunately not easily available within the timeframe of this project. Potential inclusions beyond merely location data could be information that provides context to the neighborhood the station is in: how many people live within a certain radius, is this station part of a transit center or not, is there parking available nearby? And other possible questions that would allow for a holistic understanding of the station, rather than merely focusing on the schedule as set up by TriMet. 
+In some ways, the fact that schedule information alone is not particularly predictive of usage is not a surprising discovery. Future work done on this problem would benefit highly from the inclusion of accurate location data for each station stop, which was unfortunately not easily available within the timeframe of this project. Potential inclusions beyond merely location data could be information that provides context to the neighborhood the station is in: how many people live within a certain radius, is this station part of a transit center or not, is there parking available nearby? and other possible questions that would allow for a holistic understanding of the station, rather than merely focusing on the schedule as set up by TriMet. 
 
-[SUGGESTED GRAPH: TOP AND BOTTOM 5 USAGE STOPS BY LOCATION. ADD PORTLAND MAP WITH POPULATION DISTRICTS?]
+We were able to conduct a small amount of preliminary analysis that indicates location data would be a meaningful predictor in future models. 
+
+Another capstone group kindly allowed us to use their data that provides coordinates of intersections in downtown Portland, which we were able to use to cross-reference our stations with names in "Street Name & Street Name" format, of which there were 4,706 that overlapped with the reference table we had access to. Unfortunately, the cross-referencing strategy used was not always reliable, and as such stations were not always assigned the correct coordinates. This particular location dataset had minimal, if any, effect on models trained using it. However, we were able to use this location dataset to produce Figure X, below, which shows that high-usage stations are often clustered together. This leads us to believe that a correctly-gathered location dataset would in fact make a good predictor in future models. 
+
+```{r, echo=F}
+#| fig-cap: 'Figure X: A map of bus station usage by location, using our cross-referenced location dataset. While this dataset was not reliable enough to be used in the models constructed for this project, it can be used to show that high-usage stations are clustered in specific areas, and potentially even along specific lines.'
+ggplot() + 
+  geom_sf(data=orwa, fill=NA) + 
+  #geom_sf(data=pdx_pop_gg, aes(fill=estimate))+
+  # sort by value--high on top 
+  geom_point(data=stop_locations %>% filter(total_usage < 50), aes(x=long, y=lat, color=total_usage))+
+  geom_point(data=stop_locations %>% filter(total_usage > 50), aes(x=long, y=lat, color=total_usage))+
+  geom_point(data=stop_locations %>% filter(total_usage > 200), aes(x=long, y=lat, color=total_usage))+
+  geom_point(data=stop_locations %>% filter(total_usage > 250), aes(x=long, y=lat, color=total_usage))+
+  geom_point(data=stop_locations %>% filter(total_usage > 300), aes(x=long, y=lat, color=total_usage))+
+  xlim(-122.78, -122.47) + 
+  ylim(45.43, 45.65) +
+  scale_color_continuous(type='viridis', name='Total Usage', direction=-1) + 
+  theme_bw() +
+  labs(
+    title='Bus Station Usage by Location', 
+    subtitle='Made Using Location Data Subset',
+    caption = 'Data from TriMet and OpenStreetMap'
+  )
+  
+```
+
+In the later stages of our analysis, we found that there is in fact a way to extract TriMet stop locations from the maps provided on the TriMet website. It was too involved to be able to webscrape within the time restrictions of this project, but we manually extracted the locations of the 5 MAX and bus stations with the highest and lowest usage, resulting in a dataset of 20 stations with location information. This dataset was combined with population information retrieved from the 2024 American Community Survey to produce Figure X. It can be seen that population has an effect on transit usage as well: the cluster of stations in the bottom left of Figure X at the Clackamas Town Center are very near a high-population area. It can also be seen that most of the lowest-usage bus stations are clustered together in a relatively low-population census tract. Additionally, two of the highest-usage MAX stations are close together in the Portland downtown. Figure X provides a compelling argument for the inclusion of location and neighborhood context data in any future investigation of this topic. 
+
+```{r, echo=F}
+ggplot() + 
+  geom_sf(data=orwa, fill='lightblue') + 
+  geom_sf(data=pdx_pop_gg, aes(fill=estimate))+
+  scale_fill_continuous_sequential('Grays', name='Population', guide = guide_colorbar(theme = theme(
+      legend.direction = "horizontal",
+      legend.title.position = "top",
+      legend.text.position = "bottom"#,
+      #legend.text = element_text(angle = 90)
+    ))) + 
+  geom_point(data=max_usage, aes(x=long, y=lat, color=total_usage))+ 
+  scale_color_continuous_sequential('Plasma', name='MAX Usage', guide = guide_colorbar(theme = theme(
+      legend.direction = "horizontal",
+      legend.title.position = "top",
+      legend.text.position = "bottom"
+      ))) + 
+  geom_text(data=max_usage, aes(x=long, y=lat, label=ifelse(total_usage>500,as.character(stop_name),'')), hjust=0.5, vjust=1, size=3.25, check_overlap=T)+
+  xlim(-122.9, -122.4) + 
+  ylim(45.4, 45.62) +
+  new_scale_color() + 
+  geom_point(data=bus_usage, aes(x=long, y=lat, color=total_usage), shape='triangle')+ 
+  scale_color_continuous_sequential('Viridis', name='Bus Usage' ,guide = guide_colorbar(theme = theme(
+      legend.direction = "horizontal",
+      legend.title.position = "top",
+      legend.text.position = "bottom"
+    ))) + 
+  geom_text(data=bus_usage, aes(x=long, y=lat, label=ifelse(total_usage>500,as.character(stop_name),'')), hjust=0.5, vjust=-1, size=3.25, check_overlap=T)+
+  #coord_sf(default_crs = sf::st_crs(4326)) + 
+  theme_minimal() + 
+  labs(
+    x='', 
+    y='', 
+    caption = 'Data from TriMet and the 2024 ACS', 
+    title = 'Highest and Lowest 5 Bus and MAX Station Usage by Location', 
+    subtitle='Compare to Census Tract Populations'
+  ) + 
+  theme(legend.direction='horizontal', legend.box='vertical')
+  
+```
 
 ## In Conclusion
 
-All in all, this was a high-level analysis of TriMet usage data. We provide a database of usage data by station for Spring 2025, which also includes schedule information for each stop. This data was used to engineer a handful of features that were used to predict usage numbers, but the resulting predictions were not particularly high-scoring on any of the accuracy metrics investigated. Future work that provides location context to stations is likely to improve our ability to predict TriMet station usage. 
+All in all, this was a high-level analysis of TriMet usage data. We provide a database of usage data by station for Spring 2025, which also includes schedule information for each stop. This data was used to engineer a handful of features that were used to predict usage numbers, but the resulting predictions were not particularly high-scoring on any of the accuracy metrics investigated. Future work that provides information such as location context to stations is likely to improve our ability to predict TriMet station usage, and allow us to determine where a station could be added. 

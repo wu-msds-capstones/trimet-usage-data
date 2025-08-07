@@ -5,21 +5,12 @@ library(cowplot)
 
 ```{r, echo=F, include=FALSE}
 stop_features = read_csv('data/stop_features.csv')
-```
 
-```{r, echo=F}
-wes_features = stop_features %>% 
-  filter(stop_type == 'WES Station')
-bus_features = stop_features %>% 
-  filter(stop_type == 'Bus Station')
-bus_wes_features = bus_features %>% rbind(wes_features)
+stop_features_plot = stop_features %>% mutate(
+  stop_type = ifelse(stop_type == 'MAX Station', "MAX Station", 'Bus & WES Stations'), 
+  day = as.factor(day)
+  )
 
-low_bus = bus_wes_features %>% 
-  filter(total_usage < 30)
-med_bus = bus_wes_features %>% 
-  filter(between(total_usage, 30, 300))
-high_bus = bus_wes_features %>% 
-  filter(total_usage > 300)
 ```
 
 
@@ -47,6 +38,10 @@ Stations and routes each have their own table, and are connected by two junction
 
 Each station has a large number of arrival times from a varying number of routes. However, arrival time alone makes for a poor feature. In pursuit of better features, a number of values were engineered from the schedule data for each station stop: the number of unique routes that stop at the station, the earliest and latest times the station is used, the number of vehicles that stop at the station over the course of the day, and the average number of minutes separating arrivals at the station. These values are all calculated for each station on both weekdays and weekend days. This was done overall by selecting the arrivals at each station on a given day and counting or otherwise manipulating the data into the features of interest. The total usage number sums for each station were also calculated at this stage, since usage information was originally provided at the route level for each station. 
 
+## Ethics in Action 
+
+Consider how long you would be willing to stand at a transit station waiting if you watched the previous vehicle stop at the station from across the street and leave without you on it. It's likely you picked about 20 minutes. In this analysis, we engineered a variable that helps with this consideration: the average time between arrivals at each station. We created boxplots of this variable, separated by station type in the TriMet system. This variable was calculated by collecting all the arrivals at a station and averaging the differences between them, so stops that are only active during a certain time of day are penalized by that. For example, the WES trains only run during rush hour, with a large gap in the middle of the day, so there is one artificially large value. By combining the WES data with the bus data, this discrepancy has a minimal effect on the data. Overall, however, most routes run consistently throughout the day and the values shown should be reflective of standing at a station waiting for a transit line to arrive as scheduled. 
+
 ## Statistical Modeling 
 
 This project used Poisson regression to model station usage as a function of the engineered features. The log of the usage values had to be used, as there are a number of TriMet routes (specifically, the MAX lines) that have usage numbers that could be considered outliers, while still being important data points in our analysis.
@@ -55,20 +50,17 @@ It’s possible that Poisson regression is not the correct statistical model to 
 
 ## Machine Learning 
 
-This project used a number of machine learning models in an  attempt to predict station usage numbers from the engineered features described earlier in this paper. The models investigated increased in complexity from standard linear regression through a variety of Support Vector Machine kernels to random forest regression. Random forest models were determined to have the best performance on this dataset, and thus were chosen to conduct a more in-depth analysis. Principal component analysis (PCA) was also used, for a small gain. 
+Because of the left-skewed distributions of the usage values in this dataset (seen in Figure X), the usage values had to be log-transformed to act as good target values. The resulting distribution of this transformation can be seen in Figure X. There were 1,571 stations that had usage values of 0 and thus produced invalid log-transformed values. These stations were excluded from the regressions undertaken in this project. 
 
-Because of the distribution of the usage data, a number of models were produced: one model covering the whole dataset, as well as sub-models for four determined data categories. As can be seen in Figure 3, usage values are a very uneven distribution. 
-
-```{r, echo=F, warning=FALSE, message=F}
-#| fig-cap: 'Figure 3: Usage distributions for each station type. Note that the y-axis (Number of Stations) is *not* fixed, and that there are many more bus stations than MAX or WES Stations. There are only 6 WES stations in this dataset, and as such they were combined with the bus stations in the analysis.'
-ggplot(data=stop_features, aes(x=total_usage, fill=stop_type)) + 
+```{r, echo=F, message=F}
+#| fig-cap: 'Figure X: Distributions of Log-transformed usage values, by station type. These were the values used as targets for the regressions in this project. 1,571 stations had invalid log-transformed usage values due to an original usage value of 0, and are excluded from this plot.'
+ggplot(data=stop_features_plot, aes(x=log(total_usage), fill=stop_type)) + 
   geom_histogram() +
-  facet_wrap(~stop_type, scales='free')+
   theme_bw()+ 
   labs(
-    title='Station Usage Distribtions, by Station Type', 
+    title='Natural Log of Station Usage Distribtions, by Station Type', 
     legend.title='Station Type', 
-    x='Total Usage', 
+    x='log(Total Usage)', 
     y = 'Number of Stations',
     caption='Data from Trimet', 
     fill='Station Type'
@@ -76,113 +68,6 @@ ggplot(data=stop_features, aes(x=total_usage, fill=stop_type)) +
   scale_fill_manual(values=c('cornflowerblue', 'orange', 'blue3'))
 ```
 
-The libraries used for this analysis were not able to find successful regressions for log-transformed usage data, which meant the data was split into four sub-categories: the data for MAX stations, as well as three categories of bus and WES station usage data (low, medium, and high). The distributions of the bus station data are shown in Figures 4 and 5, below.  Low-usage bus stations are the majority of the data in this dataset, defined as stations with usage numbers between 0 and 30. Medium-usage stations have usage numbers between 30 and 300. Finally, there are a handful of stations with usage numbers over 300, which were filed as high-usage stations. These high-usage stations would commonly be considered outliers, but they are also the stations that the most people are using in the TriMet system, so it did not feel right to exclude them from the analysis. 
+This project used regression models in an attempt to predict station usage numbers from the engineered features described earlier in this paper. The inputs given to each model as independent variables were the number of unique routes that stop at the station, the earliest and latest times the station is used, the number of vehicles that stop at the station over the course of the day, and the average number of minutes separating arrivals at the station, as well as a Boolean value for day of the week and a Boolean value indicating whether each station is a MAX station. These inputs were used to predict the log-transformed usage values of each station. 
 
-```{r, echo=F, warning=FALSE, message=F}
-#| fig-cap: 'Figure 4: Usage histograms showing the constructed bus usage categories. Note the y-axis (Number of Stations) is *not* fixed, and that the majority of the data is in the low-usage category. '
-low_hist = ggplot() + 
-  geom_histogram(data=low_bus, aes(x=total_usage), fill='#00BA38', bins=31) + 
-    theme_minimal() + 
-  labs(
-    title='Low Usage', 
-    x = 'Total Usage', 
-    y = 'Number of Stations' 
-    #fill='Usage Category'
-  )
-
-med_hist = ggplot() + 
-  geom_histogram(data=med_bus, aes(x=total_usage), fill='#619CFF') + 
-    theme_minimal() + 
-  labs(
-    title='Medium Usage', 
-    x = 'Total Usage', 
-    y = 'Number of Stations' 
-    #fill='Usage Category'
-  )
-
- high_hist = ggplot() + 
-  geom_histogram(data=high_bus, aes(x=total_usage), fill='#F8766D') + 
-    theme_minimal() + 
-  labs(
-    title='High Usage', 
-    x = 'Total Usage', 
-    y = 'Number of Stations' 
-    #fill='Usage Category'
-  )
-
-plot_grid(low_hist, med_hist, high_hist,nrow=1) +
-  facet_grid() +
-  theme_bw()+ 
-  labs(
-    title='Bus Station Usage Histograms, by Usage Category', 
-    x='Total Usage', 
-    caption='Data from Trimet', 
-    fill='Usage Category'
-  ) + 
-  theme(
-    axis.text.y = element_blank(), 
-    axis.ticks.y = element_blank()
-  )
-```
-
-```{r, echo=F}
-#| fig-cap: 'Figure 5: Usage boxplots showing the constructed bus usage categories. Note the scale is *not* fixed.'
-low_plot = ggplot() + 
-  geom_boxplot(data=low_bus, aes(x=total_usage), fill='#00BA38') +
-  theme_minimal()+ 
-  labs(
-    title='Low Usage Stations', 
-    x='Total Usage', 
-    #caption='Data from Trimet', 
-    #fill='Usage Category'
-  ) + 
-  theme(
-    axis.text.y = element_blank(), 
-    axis.ticks.y = element_blank(), 
-    legend.position='none'
-  )
-med_plot = ggplot() + 
-  geom_boxplot(data=med_bus, aes(x=total_usage), fill='#619CFF') +  
-  theme_minimal()+ 
-  labs(
-    title='Medium Usage Stations', 
-    x='Total Usage', 
-    #caption='Data from Trimet', 
-    #fill='Usage Category'
-  ) + 
-  theme(
-    axis.text.y = element_blank(), 
-    axis.ticks.y = element_blank(), 
-    legend.position='none'
-  )
-high_plot = ggplot() + 
-  geom_boxplot(data=high_bus, aes(x=total_usage), fill='#F8766D') + 
-  theme_minimal()+ 
-  labs(
-    title='High Usage Stations', 
-    x='Total Usage', 
-    #caption='Data from Trimet', 
-    #fill='Usage Category'
-  ) + 
-  theme(
-    axis.text.y = element_blank(), 
-    axis.ticks.y = element_blank(), 
-    legend.position='none'
-  )
-
-plot_grid(low_plot, med_plot, high_plot,ncol=1) +
-  facet_grid() +
-  theme_bw()+ 
-  labs(
-    title='Bus Station Usage Boxplots, by Usage Category', 
-    x='Total Usage', 
-    caption='Data from Trimet', 
-    fill='Usage Category'
-  ) + 
-  theme(
-    axis.text.y = element_blank(), 
-    axis.ticks.y = element_blank()
-  )
-```
-
-As mentioned, random forest models were the main models used in this project. These random forests were limited to 10 trees and a tune length of 5, and trained using 3-fold cross-validation. The inputs given to each model as independent variables were the number of unique routes that stop at the station, the earliest and latest times the station is used, the number of vehicles that stop at the station over the course of the day, and the average number of minutes separating arrivals at the station, as well as a Boolean value for day of the week. In cases where PCA was used, all PCA transformations of these variables were used as inputs to the model. The models discussed in this paper will be those trained on PCA values, as there was found to be slight improvement when PCA was used over the raw values. The exception to this rule is the high-usage bus station data, as it was a small enough dataset the PCA transformations had no effect. 
+The models investigated increased in complexity from standard linear regression through a variety of Support Vector Machine kernels to random forest regression and a multi-layer perceptron. The random forest model was determined to have the best performance on this dataset, and as such will be the main model discussed in this report. The final, best-performing random forest had 100 trees and a tune length of 3, and was trained using 3-fold cross-validation. 
