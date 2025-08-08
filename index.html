@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.7.33">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Capstone Project</title>
+<title>Trimet Usage Data: the Impact of Schedule on Usage</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -50,21 +50,57 @@ div.csl-indent {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-bc185b5c5bdbcb35c2eb49d8a876ef70.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-cc87117a3bbd2c04b42735d24eeeecd9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-ce2436c0dc2dd8e147f1fa0947fc4a1c.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-cc87117a3bbd2c04b42735d24eeeecd9.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-1c59215f878e034bd7426c637fa661ac.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
-<meta name="citation_title" content="Capstone Project">
-<meta name="citation_author" content="Bob ">
-<meta name="citation_author" content="Jane ">
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta name="citation_title" content="Trimet Usage Data: the Impact of Schedule on Usage">
+<meta name="citation_author" content="Kaiden Elam">
+<meta name="citation_author" content="Denton Kunz">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=A guide to backward paper writing for the data sciences;,citation_abstract=Summary In this perspective, we outline a set of best practices for the planning, writing, and revision of scientific papers and other forms of professional communication in the data sciences. We propose a backward approach that begins with clearly identifying the scientific and professional goals motivating the work, followed by a purposeful mapping from those goals to each section of a paper. This approach is motivated by the conviction that manuscript writing can be more effective, efficient, creative, and even enjoyable—particularly for early-career researchers—when the overarching goals of the paper and its individual components are clearly mapped out.;,citation_author=Jon Zelner;,citation_author=Kelly Broen;,citation_author=Ella August;,citation_publication_date=2022;,citation_cover_date=2022;,citation_year=2022;,citation_fulltext_html_url=https://www.sciencedirect.com/science/article/pii/S2666389921003068;,citation_issue=3;,citation_doi=10.1016/j.patter.2021.100423;,citation_issn=2666-3899;,citation_volume=3;,citation_journal_title=Patterns;">
+<meta name="citation_reference" content="citation_title=Stop ID 9848 - hatfield government center MAX station;,citation_author=undefined TriMet;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://trimet.org/ride/stop_schedule.html?stop_id=9848&amp;amp;amp;month=8&amp;day=4&amp;route=100;,citation_publisher=TriMet;">
+<meta name="citation_reference" content="citation_title=Stops &amp;amp;amp; stations;,citation_author=undefined TriMet;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://trimet.org/ride/stop_select_form.html;,citation_publisher=TriMet;">
+<meta name="citation_reference" content="citation_title=TriMet ridership;,citation_author=undefined TriMet;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://trimet.org/about/performance.htm#ridership;,citation_publisher=TriMet;">
+<meta name="citation_reference" content="citation_title=TriMet passenger census - spring 2025_2025;,citation_author=undefined TriMet;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_publisher=TriMet;">
 </head>
 
 <body class="quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -234,8 +270,8 @@ div.csl-indent {
 <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Capstone Project</h1>
-            <p class="subtitle lead">Subtitle</p>
+      <h1 class="title">Trimet Usage Data: the Impact of Schedule on Usage</h1>
+            <p class="subtitle lead">Willamette MSDS Capstone Project 2025</p>
           </div>
 
     
@@ -247,8 +283,8 @@ div.csl-indent {
                 <div>
             <div class="quarto-title-meta-heading">Authors</div>
             <div class="quarto-title-meta-contents">
-                        <p>Bob </p>
-                        <p>Jane </p>
+                        <p>Kaiden Elam </p>
+                        <p>Denton Kunz </p>
                       </div>
           </div>
                 
@@ -270,12 +306,36 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
+  <ul class="collapse">
+  <li><a href="#a-note-on-terminology" id="toc-a-note-on-terminology" class="nav-link" data-scroll-target="#a-note-on-terminology">A Note on Terminology</a></li>
+  </ul></li>
   <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">Background</a></li>
+  <li><a href="#ethical-considerations" id="toc-ethical-considerations" class="nav-link" data-scroll-target="#ethical-considerations">Ethical Considerations</a></li>
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
-  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a></li>
-  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
-  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#data-collection-and-manipulation" id="toc-data-collection-and-manipulation" class="nav-link" data-scroll-target="#data-collection-and-manipulation">Data Collection and Manipulation</a>
+  <ul class="collapse">
+  <li><a href="#pdf-data-extraction-and-webscraping" id="toc-pdf-data-extraction-and-webscraping" class="nav-link" data-scroll-target="#pdf-data-extraction-and-webscraping">PDF Data Extraction and Webscraping</a></li>
+  <li><a href="#database-construction" id="toc-database-construction" class="nav-link" data-scroll-target="#database-construction">Database Construction</a></li>
+  <li><a href="#feature-engineering" id="toc-feature-engineering" class="nav-link" data-scroll-target="#feature-engineering">Feature Engineering</a></li>
+  </ul></li>
+  <li><a href="#ethics-in-action" id="toc-ethics-in-action" class="nav-link" data-scroll-target="#ethics-in-action">Ethics in Action</a></li>
+  <li><a href="#statistical-modeling" id="toc-statistical-modeling" class="nav-link" data-scroll-target="#statistical-modeling">Statistical Modeling</a></li>
+  <li><a href="#machine-learning" id="toc-machine-learning" class="nav-link" data-scroll-target="#machine-learning">Machine Learning</a></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
+  <ul class="collapse">
+  <li><a href="#ethics-in-action-1" id="toc-ethics-in-action-1" class="nav-link" data-scroll-target="#ethics-in-action-1">Ethics in Action</a></li>
+  <li><a href="#statistical-modeling-1" id="toc-statistical-modeling-1" class="nav-link" data-scroll-target="#statistical-modeling-1">Statistical Modeling</a></li>
+  <li><a href="#machine-learning-1" id="toc-machine-learning-1" class="nav-link" data-scroll-target="#machine-learning-1">Machine Learning</a></li>
+  </ul></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a>
+  <ul class="collapse">
+  <li><a href="#future-work" id="toc-future-work" class="nav-link" data-scroll-target="#future-work">Future Work</a></li>
+  <li><a href="#in-conclusion" id="toc-in-conclusion" class="nav-link" data-scroll-target="#in-conclusion">In Conclusion</a></li>
+  </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
@@ -292,28 +352,188 @@ div.csl-indent {
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>Something something, and then I state some citable facts <span class="citation" data-cites="Zelner2022">(<a href="#ref-Zelner2022" role="doc-biblioref">Zelner, Broen, and August 2022</a>)</span>.</p>
+<p>Portland is rated one of the most walkable cities in the United States. However, the United States has famously worse walkability and public transit than many other developed countries. Namely, Japan and the Netherlands have state-of-the-art public transportation systems. To better understand how we could improve public transit in Portland, we explored Trimet data. We wanted to use data science to answer the question, “What qualities of TriMet transit stops and routes affect their usage numbers?” In understanding the factors behind station and route usage, we should be able to uncover potential locations for new stations.</p>
+<p>In this paper, we will gather, transform, and organize publicly available Trimet data. We will perform both statistics and machine learning to answer our question and explore the data.</p>
+<section id="a-note-on-terminology" class="level3">
+<h3 class="anchored" data-anchor-id="a-note-on-terminology">A Note on Terminology</h3>
+<p>For clarity throughout this paper, we will define any stop along a route as a “station”. Additionally, each route is defined as a series of stations going a specific direction on a specific day. For example, a series of stations running on a weekday is considered a different route from a series of stations running on the weekend.</p>
+</section>
 </section>
 <section id="background" class="level1">
 <h1>Background</h1>
+<p>Recent studies specific to Portland public transit include investigating effects of COVID on public transit demand, effects of public transit on physical activity, effects on ridesharing and biking, effects on employment, equity-advancing practices, and more. However, this study focuses specifically on TriMet and the qualities and features of TriMet stops. Therefore, any similar previous studies have likely been done by TriMet themselves. Our research is certainly not more in-depth than TriMet’s, since they have easier access to their own data. We hope to provide a publicly available inquiry into TriMet’s data.</p>
+</section>
+<section id="ethical-considerations" class="level1">
+<h1>Ethical Considerations</h1>
+<p>Access to public transit can lead to difficult ethical considerations. Neighborhoods with historically underprivileged populations are often the ones that rely most on public transit, but are also those that are least likely to receive transit stations within a usable distance. The idea of what counts as a “usable distance” is itself a difficult question to answer ethically. This can even vary for the same person over time–walking for 10 minutes on the way to work might be a nice part of the commute, even in the rain, but becomes a slog when hauling luggage to the airport. A distance that takes one person ten minutes to walk may take someone else a half hour, and they have no energy to do errands once they’ve arrived at the bus stop. These are not easy considerations to make, and yet they are crucial ones. Transit centers can get around this issue somewhat by providing parking, but that still requires someone to have a car in order to get to the transit center to take a transit route–or requires having a larger number of local transit routes that feed into the transit center from the surrounding area. These are only a few of the ethical considerations that must go into designing and running a transit system.</p>
+<p>All data used in this project is publicly available and does not contain information about protected classes, so it requires no ethical considerations while being worked with.</p>
 </section>
 <section id="data" class="level1">
 <h1>Data</h1>
+<p>The final dataset constructed for the analysis done in this project is a combination of the usage and schedule raw data files, described in the next section. It has 10 columns, seven of which are independent variables. The dataset also contains one dependent variable and two descriptors about each station. The unit of interest is a station, so each row in the final table describes a station. Each station stop is described by its ID in the TriMet system as well as the name of the station, which is typically related to its location in some way. Transit centers and street intersections are common name formats. Each station has associated with it a combined usage number across all the routes that stop there, including both onboardings and disembarkings. This usage total acts as our dependent variable. Independent variables engineered from the schedule data (see <em>Feature Engineering</em>) are as follows: number of routes that stop at the station, the earliest and latest arrivals at that station, the number of unique vehicles that arrive at the station over the course of the day, and the average number of minutes between arrivals. These values are calculated for both weekdays and weekend days, since the schedules can vary between weekdays and the weekend. Some routes do not run on the weekends, and thus only have weekday information given. Weekday information has a Boolean day value of 0, and weekend information has a value of 1. A final variable included in our dataset is a Boolean indicator of if a certain station is a MAX station. This was encoded the same way day of the week was: with a 0 for non-MAX stations, and a value of 1 for MAX stations.</p>
+<p>The distribution of usage by station type can be seen in Figure X. There are only 6 WES commuter rail stations in the TriMet system, so they were combined with the bus stations because they have usage numbers in the same range. Many stations in this dataset have low usage numbers: bus and WES station usage has a mean value of 19.52 and a median of 5. This combined category includes 10,859 entries across two day values. MAX stations are a subset of the dataset, consisting of only 367 entries across two days, but tend to have higher usage. The mean usage value of MAX stations is 340.3, and the median is 239.0.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="capstone_files/figure-html/unnamed-chunk-5-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure X: Distributions of usage values for each station type. WES and bus stations are combined due to the low number of WES stations in the dataset. Note that the y-axis is not fixed: there are a much smaller number of MAX stations than there are bus stations."><img src="capstone_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672" alt="Figure X: Distributions of usage values for each station type. WES and bus stations are combined due to the low number of WES stations in the dataset. Note that the y-axis is not fixed: there are a much smaller number of MAX stations than there are bus stations."></a></p>
+<figcaption>Figure X: Distributions of usage values for each station type. WES and bus stations are combined due to the low number of WES stations in the dataset. Note that the y-axis is <em>not</em> fixed: there are a much smaller number of MAX stations than there are bus stations.</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="analysis" class="level1">
-<h1>Analysis</h1>
+<section id="methods" class="level1">
+<h1>Methods</h1>
+<section id="data-collection-and-manipulation" class="level2">
+<h2 class="anchored" data-anchor-id="data-collection-and-manipulation">Data Collection and Manipulation</h2>
+<section id="pdf-data-extraction-and-webscraping" class="level3">
+<h3 class="anchored" data-anchor-id="pdf-data-extraction-and-webscraping">PDF Data Extraction and Webscraping</h3>
+<p>Data used for this project was available publicly through TriMet’s website, though in several different forms. This required a number of ingestion strategies.</p>
+<p>Usage data was provided in a number of quarterly report PDFs <span class="citation" data-cites="trimet_census">(<a href="#ref-trimet_census" role="doc-biblioref">TriMet 2025c</a>)</span> on the TriMet website <span class="citation" data-cites="usage_access">(<a href="#ref-usage_access" role="doc-biblioref">TriMet 2025d</a>)</span>, which were then ingested and processed to extract the data. Each page in the PDF represented a single route, on a single day, going a single direction. It listed each station along the path, with its usage numbers over the entirety of Spring 2025. Trimet only releases their usage numbers for Spring and Fall, so this is effectively half a year’s worth of data. The PDFs were originally partitioned into Weekday, Saturday, and Sunday documents, but we would eventually combine the Saturday and Sunday schedules into a single “weekend” category.</p>
+<p>Information about TriMet schedules was, however, slightly more complicated. Schedules as posted on the TriMet website under their Schedules tab only listed a small subset of the station stops that are present in the usage reports. Thankfully, TriMet also has their schedules listed by station, searchable by station ID number, such as the list at <span class="citation" data-cites="trimet_stop">(<a href="#ref-trimet_stop" role="doc-biblioref">TriMet 2025a</a>)</span>, which can be accessed from <span class="citation" data-cites="stop_page">(<a href="#ref-stop_page" role="doc-biblioref">TriMet 2025b</a>)</span>. This meant that once a list of IDs had been collected from the PDF reports, those IDs could be cross-referenced with the station schedules to obtain the raw schedule data for our many stops of interest, rather than a tenth of them.</p>
+</section>
+<section id="database-construction" class="level3">
+<h3 class="anchored" data-anchor-id="database-construction">Database Construction</h3>
+<p>The data was organized into four tables: stations, routes, schedule, and usage. Even though the schedules and usage were already separated, we needed to ensure that the route names, station names, and station ids all matched between files. For these reasons, we used an R script to prepare the data for ingestion into the Postgres database. The output was another four csv files that would each correspond to one of the database tables and could be copied in directly. Below (Figure 3) is an Entity Relationship Diagram showing our database organization:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="erd.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure 3: Entity Relationship Diagram for the database constructed in this project."><img src="erd.png" class="img-fluid figure-img" alt="Figure 3: Entity Relationship Diagram for the database constructed in this project."></a></p>
+<figcaption>Figure 3: Entity Relationship Diagram for the database constructed in this project.</figcaption>
+</figure>
+</div>
+<p>Stations and routes each have their own table, and are connected by two junction tables, schedule and usage. Each route is defined as a series of stations going a specific direction on a specific day. The usage table gives a total usage statistic for a specific station on a specific route. Alternatively, you can use the usage_id to select a station-route combination. This is useful within the schedule table, where the same route_id and station_id can have multiple arrival times in a schedule. This ensures third normal form because each table has a primary key and each non-key attribute depends solely on the key.</p>
+</section>
+<section id="feature-engineering" class="level3">
+<h3 class="anchored" data-anchor-id="feature-engineering">Feature Engineering</h3>
+<p>Each station has a large number of arrival times from a varying number of routes. However, arrival time alone makes for a poor feature. In pursuit of better features, a number of values were engineered from the schedule data for each station stop: the number of unique routes that stop at the station, the earliest and latest times the station is used, the number of vehicles that stop at the station over the course of the day, and the average number of minutes separating arrivals at the station. These values are all calculated for each station on both weekdays and weekend days. This was done overall by selecting the arrivals at each station on a given day and counting or otherwise manipulating the data into the features of interest. The total usage number sums for each station were also calculated at this stage, since usage information was originally provided at the route level for each station.</p>
+</section>
+</section>
+<section id="ethics-in-action" class="level2">
+<h2 class="anchored" data-anchor-id="ethics-in-action">Ethics in Action</h2>
+<p>Consider how long you would be willing to stand at a transit station waiting if you watched the previous vehicle stop at the station from across the street and leave without you on it. It’s likely you picked about 20 minutes. In this analysis, we engineered a variable that helps with this consideration: the average time between arrivals at each station. We created boxplots of this variable, separated by station type in the TriMet system. This variable was calculated by collecting all the arrivals at a station and averaging the differences between them, so stops that are only active during a certain time of day are penalized by that. For example, the WES trains only run during rush hour, with a large gap in the middle of the day, so there is one artificially large value. By combining the WES data with the bus data, this discrepancy has a minimal effect on the data. Overall, however, most routes run consistently throughout the day and the values shown should be reflective of standing at a station waiting for a transit line to arrive as scheduled.</p>
+</section>
+<section id="statistical-modeling" class="level2">
+<h2 class="anchored" data-anchor-id="statistical-modeling">Statistical Modeling</h2>
+<p>This project used Poisson regression to model station usage as a function of the engineered features. The log of the usage values had to be used, as there are a number of TriMet routes (specifically, the MAX lines) that have usage numbers that could be considered outliers, while still being important data points in our analysis.</p>
+<p>It’s possible that Poisson regression is not the correct statistical model to use for our data, since one of its assumptions is equidispersion. Due to the strength of the MAX lines, our data is heavily right skewed with a wildly differing mean and variance.</p>
+</section>
+<section id="machine-learning" class="level2">
+<h2 class="anchored" data-anchor-id="machine-learning">Machine Learning</h2>
+<p>Because of the left-skewed distributions of the usage values in this dataset (seen in Figure X), the usage values had to be log-transformed to act as good target values. The resulting distribution of this transformation can be seen in Figure X. There were 1,571 stations that had usage values of 0 and thus produced invalid log-transformed values. These stations were excluded from the regressions undertaken in this project.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="capstone_files/figure-html/unnamed-chunk-8-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure X: Distributions of Log-transformed usage values, by station type. These were the values used as targets for the regressions in this project. 1,571 stations had invalid log-transformed usage values due to an original usage value of 0, and are excluded from this plot."><img src="capstone_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672" alt="Figure X: Distributions of Log-transformed usage values, by station type. These were the values used as targets for the regressions in this project. 1,571 stations had invalid log-transformed usage values due to an original usage value of 0, and are excluded from this plot."></a></p>
+<figcaption>Figure X: Distributions of Log-transformed usage values, by station type. These were the values used as targets for the regressions in this project. 1,571 stations had invalid log-transformed usage values due to an original usage value of 0, and are excluded from this plot.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>This project used regression models in an attempt to predict station usage numbers from the engineered features described earlier in this paper. The inputs given to each model as independent variables were the number of unique routes that stop at the station, the earliest and latest times the station is used, the number of vehicles that stop at the station over the course of the day, and the average number of minutes separating arrivals at the station, as well as a Boolean value for day of the week and a Boolean value indicating whether each station is a MAX station. These inputs were used to predict the log-transformed usage values of each station.</p>
+<p>The models investigated increased in complexity from standard linear regression through a variety of Support Vector Machine kernels to random forest regression and a multi-layer perceptron. The random forest model was determined to have the best performance on this dataset, and as such will be the main model discussed in this report. The final, best-performing random forest had 100 trees and a tune length of 3, and was trained using 3-fold cross-validation.</p>
+</section>
 </section>
 <section id="results" class="level1">
 <h1>Results</h1>
+<section id="ethics-in-action-1" class="level2">
+<h2 class="anchored" data-anchor-id="ethics-in-action-1">Ethics in Action</h2>
+<p>Figure X, below, shows the boxplot of minutes between arrival times created to investigate the range of times that could be spent waiting at a transit station.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="capstone_files/figure-html/unnamed-chunk-12-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure X: Boxplots showing the average number of minutes between arrivals at a station, faceted by station type. WES commuter rail stations are combined with bus data, since there are only 6 WES stations in the TriMet system. Data from both weekdays and weekend days is included. Outliers higher than 100 are excluded for a better view of the non-outlier data."><img src="capstone_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672" alt="Figure X: Boxplots showing the average number of minutes between arrivals at a station, faceted by station type. WES commuter rail stations are combined with bus data, since there are only 6 WES stations in the TriMet system. Data from both weekdays and weekend days is included. Outliers higher than 100 are excluded for a better view of the non-outlier data."></a></p>
+<figcaption>Figure X: Boxplots showing the average number of minutes between arrivals at a station, faceted by station type. WES commuter rail stations are combined with bus data, since there are only 6 WES stations in the TriMet system. Data from both weekdays and weekend days is included. Outliers higher than 100 are excluded for a better view of the non-outlier data.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>20 minutes is often considered a reasonable maximum time to wait at a transit stop between arrivals. However, it can be seen in Figure X that only the MAX lines run every 15-20 minutes regularly, and that only half of the buses by quartile are 25 minutes or less. The third quartile of the bus and WES commuter rail stations goes up over 60 minutes. More than an hour is a long time to wait at a transit stop. This illustrates just one of many ethical considerations that must be taken into account when designing a transit system–or even simply running one, as TriMet is doing. It also goes some way in explaining why many TriMet stations see as little usage as they do.</p>
+</section>
+<section id="statistical-modeling-1" class="level2">
+<h2 class="anchored" data-anchor-id="statistical-modeling-1">Statistical Modeling</h2>
+<p>We first created a model with all of our available features: Number of routes, number of arrivals, earliest arrival, latest arrival, average arrival difference, and day. The summary of the model shows that many of these features have negligible effects on the response variable. Since the poisson regression logs the data by default, we take the exponent of our summary statistics to interpret the data. The most salient feature was day, which tells us that usage can be expected to drop by around 8% on weekends.</p>
+<p>Another model uses only the number of routes feature. This performed only slightly better. The summary shows that with each additional route to a particular station, we can expect the usage to increase by roughly 50%. However, after checking the validity of this through exploratory data analysis, we aren’t confident in the model’s accuracy. The majority of stations have less than five routes and the highest usage numbers are recorded there.</p>
+</section>
+<section id="machine-learning-1" class="level2">
+<h2 class="anchored" data-anchor-id="machine-learning-1">Machine Learning</h2>
+<p>The results of the final random forest model constructed for this project are shown in Figure X. This model had a test RMSE of 0.689 and an <span class="math inline">\(R^2\)</span> value of 0.521, which is middle-of-the-road for regression accuracy.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="capstone_files/figure-html/unnamed-chunk-13-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure X: Predicted vs test log-usage values for the best model constructed over the course of this project. This model had an RMSE value of 0.689 and an R^2 value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. The vertical lines show where many usage values were transformed into a single log-usage value."><img src="capstone_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672" alt="Figure X: Predicted vs test log-usage values for the best model constructed over the course of this project. This model had an RMSE value of 0.689 and an R^2 value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. The vertical lines show where many usage values were transformed into a single log-usage value."></a></p>
+<figcaption>Figure X: Predicted vs test log-usage values for the best model constructed over the course of this project. This model had an RMSE value of 0.689 and an <span class="math inline">\(R^2\)</span> value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. The vertical lines show where many usage values were transformed into a single log-usage value.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>As can be seen distinctly in the residuals of this model (shown in Figure X) the random forest has a tendency to over-predict at low log-usage values, where much of the data is concentrated, and under-predict at high log-usage values–though it evens out at very high log-usage values, between 2 and 3. This is likely a result of the log-transform assigning many usage values to a single log-usage value. The vertical lines seen between -2 and 0 are good evidence of this: the model is trying to predict a range of values, but the transform means they’re all a single value.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="capstone_files/figure-html/unnamed-chunk-14-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figure X: Residuals of the best regression model constructed over the course of this project. This model had an RMSE value of 0.689 and an R^2 value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. This is demostrated by the definite shape of the residuals. The vertical lines show where many usage values were transformed into a single log-usage value."><img src="capstone_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672" alt="Figure X: Residuals of the best regression model constructed over the course of this project. This model had an RMSE value of 0.689 and an R^2 value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. This is demostrated by the definite shape of the residuals. The vertical lines show where many usage values were transformed into a single log-usage value."></a></p>
+<figcaption>Figure X: Residuals of the best regression model constructed over the course of this project. This model had an RMSE value of 0.689 and an <span class="math inline">\(R^2\)</span> value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. This is demostrated by the definite shape of the residuals. The vertical lines show where many usage values were transformed into a single log-usage value.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Overall, this model is relatively good at finding a ballpark value, but we would prefer to obtain more predictive data before applying it to any particularly meaningful analysis.</p>
+</section>
 </section>
 <section id="conclusions" class="level1">
 <h1>Conclusions</h1>
+<p>Over the course of this project, we went through the data collection and engineering process as well as modeling usage using statistical and machine learning-based regressions. Two types of data were collected from the TriMet website: usage information by station for Spring 2025, and schedule information for each station. These values were uploaded into a database, as well as transformed into a number of features for use in predicting the usage value of a station.</p>
+<p>We experimented with multiple Poisson regression models, but ultimately weren’t able to generate accurate predictions. Plotting usage against predicted usage shows a scatterplot of points randomly spread on either side of the y=x diagonal line. Additionally, the summary of the model shows that each variable has negligible effects on usage. It’s possible that a different statistical model should be used, but more likely that the features we created are simply not good predictors of usage.</p>
+<p>[TALK ABOUT THE MACHINE LEARNING MODELS]</p>
+<section id="future-work" class="level2">
+<h2 class="anchored" data-anchor-id="future-work">Future Work</h2>
+<p>In some ways, the fact that schedule information alone is not particularly predictive of usage is not a surprising discovery. Future work done on this problem would benefit highly from the inclusion of accurate location data for each station stop, which was unfortunately not easily available within the timeframe of this project. Potential inclusions beyond merely location data could be information that provides context to the neighborhood the station is in: how many people live within a certain radius, is this station part of a transit center or not, is there parking available nearby? and other possible questions that would allow for a holistic understanding of the station, rather than merely focusing on the schedule as set up by TriMet.</p>
+<p>We were able to conduct a small amount of preliminary analysis that indicates location data would be a meaningful predictor in future models.</p>
+<p>Another capstone group kindly allowed us to use their data that provides coordinates of intersections in downtown Portland, which we were able to use to cross-reference our stations with names in “Street Name &amp; Street Name” format, of which there were 4,706 that overlapped with the reference table we had access to. Unfortunately, the cross-referencing strategy used was not always reliable, and as such stations were not always assigned the correct coordinates. This particular location dataset had minimal, if any, effect on models trained using it. However, we were able to use this location dataset to produce Figure X, below, which shows that high-usage stations are often clustered together. This leads us to believe that a correctly-gathered location dataset would in fact make a good predictor in future models.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="capstone_files/figure-html/unnamed-chunk-30-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure X: A map of bus station usage by location, using our cross-referenced location dataset. While this dataset was not reliable enough to be used in the models constructed for this project, it can be used to show that high-usage stations are clustered in specific areas, and potentially even along specific lines."><img src="capstone_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672" alt="Figure X: A map of bus station usage by location, using our cross-referenced location dataset. While this dataset was not reliable enough to be used in the models constructed for this project, it can be used to show that high-usage stations are clustered in specific areas, and potentially even along specific lines."></a></p>
+<figcaption>Figure X: A map of bus station usage by location, using our cross-referenced location dataset. While this dataset was not reliable enough to be used in the models constructed for this project, it can be used to show that high-usage stations are clustered in specific areas, and potentially even along specific lines.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In the later stages of our analysis, we found that there is in fact a way to extract TriMet stop locations from the maps provided on the TriMet website. It was too involved to be able to webscrape within the time restrictions of this project, but we manually extracted the locations of the 5 MAX and bus stations with the highest and lowest usage, resulting in a dataset of 20 stations with location information. This dataset was combined with population information retrieved from the 2024 American Community Survey to produce Figure X. It can be seen that population has an effect on transit usage as well: the cluster of stations in the bottom left of Figure X at the Clackamas Town Center are very near a high-population area. It can also be seen that most of the lowest-usage bus stations are clustered together in a relatively low-population census tract. Additionally, two of the highest-usage MAX stations are close together in the Portland downtown. Figure X provides a compelling argument for the inclusion of location and neighborhood context data in any future investigation of this topic.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="capstone_files/figure-html/unnamed-chunk-31-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="capstone_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="in-conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="in-conclusion">In Conclusion</h2>
+<p>All in all, this was a high-level analysis of TriMet usage data. We provide a database of usage data by station for Spring 2025, which also includes schedule information for each stop. This data was used to engineer a handful of features that were used to predict usage numbers, but the resulting predictions were not particularly high-scoring on any of the accuracy metrics investigated. Future work that provides information such as location context to stations is likely to improve our ability to predict TriMet station usage, and allow us to determine where a station could be added.</p>
+</section>
 </section>
 <section id="references" class="level1">
 <h1>References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-Zelner2022" class="csl-entry" role="listitem">
-Zelner, Jon, Kelly Broen, and Ella August. 2022. <span>“A Guide to Backward Paper Writing for the Data Sciences.”</span> <em>Patterns</em> 3 (3): 100423. <a href="https://doi.org/10.1016/j.patter.2021.100423">https://doi.org/10.1016/j.patter.2021.100423</a>.
+<div id="ref-trimet_stop" class="csl-entry" role="listitem">
+TriMet. 2025a. <span>“Stop ID 9848 - Hatfield Government Center MAX Station.”</span> TriMet. <a href="https://trimet.org/ride/stop_schedule.html?stop_id=9848&amp;month=8&amp;day=4&amp;route=100">https://trimet.org/ride/stop_schedule.html?stop_id=9848&amp;month=8&amp;day=4&amp;route=100</a>.
+</div>
+<div id="ref-stop_page" class="csl-entry" role="listitem">
+———. 2025b. <span>“Stops &amp; Stations.”</span> TriMet. <a href="https://trimet.org/ride/stop_select_form.html">https://trimet.org/ride/stop_select_form.html</a>.
+</div>
+<div id="ref-trimet_census" class="csl-entry" role="listitem">
+———. 2025c. <span>“TriMet Passenger Census - Spring 2025_2025.”</span> TriMet.
+</div>
+<div id="ref-usage_access" class="csl-entry" role="listitem">
+———. 2025d. <span>“TriMet Ridership.”</span> TriMet. <a href="https://trimet.org/about/performance.htm#ridership">https://trimet.org/about/performance.htm#ridership</a>.
 </div>
 </div>
 </section>
@@ -733,6 +953,38 @@ Zelner, Jon, Kelly Broen, and Ella August. 2022. <span>“A Guide to Backward Pa
   });
   </script>
 </div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

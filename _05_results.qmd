@@ -1,1 +1,104 @@
+```{r echo=FALSE, include=F} 
+library(tidyverse)
+library(cowplot)
+```
+
+```{r, echo=F, include=F}
+rf_data = read_csv('data/rf data.csv')
+```
+
+```{r, echo=F, message=F}
+stop_features = read_csv('data/stop_features.csv')
+
+stop_features_plot = stop_features %>% mutate(
+  stop_type = ifelse(stop_type == 'MAX Station', "MAX Station", 'Bus & WES Stations'), 
+  day = as.factor(day)
+  )
+```
+
 # Results
+
+## Ethics in Action 
+
+Figure X, below, shows the boxplot of minutes between arrival times created to investigate the range of times that could be spent waiting at a transit station. 
+
+```{r, echo=F, warning=F}
+#| fig-cap: 'Figure X: Boxplots showing the average number of minutes between arrivals at a station, faceted by station type. WES commuter rail stations are combined with bus data, since there are only 6 WES stations in the TriMet system. Data from both weekdays and weekend days is included. Outliers higher than 100 are excluded for a better view of the non-outlier data.'
+ggplot(data=stop_features_plot, aes(x=arrival_diff, fill=stop_type)) + 
+  geom_boxplot() +
+  xlim(0, 100) + 
+  theme_bw()+ 
+  labs(
+    title='Average Difference between Arrival Times, by Station Type', 
+    legend.title='Station Type', 
+    x='Number of Minutes between Arrivals', 
+    caption='Data from Trimet', 
+    fill='Station Type'
+  ) + 
+  theme(
+    axis.text.y = element_blank(), 
+    axis.ticks.y = element_blank()
+  ) +
+  scale_fill_manual(values=c('cornflowerblue', 'orange', 'blue3'))
+```
+
+20 minutes is often considered a reasonable maximum time to wait at a transit stop between arrivals. However, it can be seen in Figure X that only the MAX lines run every 15-20 minutes regularly, and that only half of the buses by quartile are 25 minutes or less. The third quartile of the bus and WES commuter rail stations goes up over 60 minutes. More than an hour is a long time to wait at a transit stop. 
+This illustrates just one of many ethical considerations that must be taken into account when designing a transit system–or even simply running one, as TriMet is doing. It also goes some way in explaining why many TriMet stations see as little usage as they do. 
+
+## Statistical Modeling 
+
+We first created a model with all of our available features: Number of routes, number of arrivals, earliest arrival, latest arrival, average arrival difference, and day. The summary of the model shows that many of these features have negligible effects on the response variable. Since the poisson regression logs the data by default, we take the exponent of our summary statistics to interpret the data. The most salient feature was day, which tells us that usage can be expected to drop by around 8% on weekends. 
+
+Another model uses only the number of routes feature. This performed only slightly better. The summary shows that with each additional route to a particular station, we can expect the usage to increase by roughly 50%. However, after checking the validity of this through exploratory data analysis, we aren’t confident in the model’s accuracy. The majority of stations have less than five routes and the highest usage numbers are recorded there. 
+
+
+## Machine Learning 
+
+The results of the final random forest model constructed for this project are shown in Figure X. This model had a test RMSE of 0.689 and an $R^2$ value of 0.521, which is middle-of-the-road for regression accuracy. 
+
+```{r, echo=F}
+#| fig-cap: 'Figure X: Predicted vs test log-usage values for the best model constructed over the course of this project. This model had an RMSE value of 0.689 and an $R^2$ value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. The vertical lines show where many usage values were transformed into a single log-usage value.'
+rf_plot = ggplot(rf_data) + 
+  geom_point(aes(x=log_usage, y=rf_pred, alpha=0.5)) + 
+  geom_line(aes(x=log_usage, y=log_usage), colour='blue') + 
+  #xlab('real')+ 
+  #ylab('predicted') + 
+  theme_bw() + 
+  labs(
+    title = 'Predicted vs Test Usages',
+    x = 'Log-transformed Test Usage', 
+    y = 'Predicted Usage', 
+    caption = 'Data from Trimet'
+  ) + 
+  theme(
+    legend.position='none'
+  )
+
+rf_plot
+```
+
+As can be seen distinctly in the residuals of this model (shown in Figure X) the random forest has a tendency to over-predict at low log-usage values, where much of the data is concentrated, and under-predict at high log-usage values--though it evens out at very high log-usage values, between 2 and 3. This is likely a result of the log-transform assigning many usage values to a single log-usage value. The vertical lines seen between -2 and 0 are good evidence of this: the model is trying to predict a range of values, but the transform means they're all a single value. 
+
+```{r, echo=F}
+#| fig-cap: 'Figure X: Residuals of the best regression model constructed over the course of this project. This model had an RMSE value of 0.689 and an $R^2$ value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. This is demostrated by the definite shape of the residuals. The vertical lines show where many usage values were transformed into a single log-usage value.'
+rf_resid = ggplot(rf_data) + 
+  geom_point(aes(x=log_usage, y = log_usage - rf_pred), alpha=0.5) + 
+  geom_hline(aes(yintercept = 0), color='blue') + 
+  theme_bw() + 
+  labs(
+    title = 'Residuals of Regression', 
+    x = 'Log-transformed Test Usage', 
+    y = 'Residual (predicted - test)', 
+    caption = 'Data from Trimet'
+  ) 
+
+rf_resid
+```
+
+```{r, echo=F}
+# plot_grid(rf_plot, rf_resid ,nrow=1) +
+#   facet_grid() +
+#   theme_minimal()
+```
+
+Overall, this model is relatively good at finding a ballpark value, but we would prefer to obtain more predictive data before applying it to any particularly meaningful analysis. 

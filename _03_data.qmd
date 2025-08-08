@@ -1,1 +1,38 @@
 # Data
+
+```{r echo=FALSE, include=FALSE} 
+library(tidyverse)
+library(cowplot)
+```
+
+```{r, echo=F, include=FALSE}
+stop_features = read_csv('data/stop_features.csv')
+
+stop_features_plot = stop_features %>% mutate(
+  stop_type = ifelse(stop_type == 'MAX Station', "MAX Station", 'Bus & WES Stations'), 
+  day = as.factor(day)
+  )
+
+```
+
+The final dataset constructed for the analysis done in this project is a combination of the usage and schedule raw data files, described in the next section. It has 10 columns, seven of which are independent variables. The dataset also contains one dependent variable and two descriptors about each station. The unit of interest is a station, so each row in the final table describes a station.  Each station stop is described by its ID in the TriMet system as well as the name of the station, which is typically related to its location in some way. Transit centers and street intersections are common name formats. Each station has associated with it a combined usage number across all the routes that stop there, including both onboardings and disembarkings. This usage total acts as our dependent variable. Independent variables engineered from the schedule data (see *Feature Engineering*) are as follows: number of routes that stop at the station, the earliest and latest arrivals at that station, the number of unique vehicles that arrive at the station over the course of the day, and the average number of minutes between arrivals. These values are calculated for both weekdays and weekend days, since the schedules can vary between weekdays and the weekend. Some routes do not run on the weekends, and thus only have weekday information given. Weekday information has a Boolean day value of 0, and weekend information has a value of 1. A final variable included in our dataset is a Boolean indicator of if a certain station is a MAX station. This was encoded the same way day of the week was: with a 0 for non-MAX stations, and a value of 1 for MAX stations. 
+
+The distribution of usage by station type can be seen in Figure X. There are only 6 WES commuter rail stations in the TriMet system, so they were combined with the bus stations because they have usage numbers in the same range. Many stations in this dataset have low usage numbers: bus and WES station usage has a mean value of 19.52 and a median of 5. This combined category includes 10,859 entries across two day values. MAX stations are a subset of the dataset, consisting of only 367 entries across two days, but tend to have higher usage. The mean usage value of MAX stations is 340.3, and the median is 239.0. 
+
+```{r, echo=F, message=F}
+#| fig-cap: 'Figure X: Distributions of usage values for each station type. WES and bus stations are combined due to the low number of WES stations in the dataset. Note that the y-axis is *not* fixed: there are a much smaller number of MAX stations than there are bus stations.'
+ggplot(data=stop_features_plot, aes(x=total_usage, fill=stop_type)) + 
+  geom_histogram() +
+  facet_wrap(~stop_type, scales='free')+
+  theme_bw()+ 
+  labs(
+    title='Station Usage Distributions, by Station Type', 
+    legend.title='Station Type', 
+    x='Total Usage', 
+    y = 'Number of Stations',
+    caption='Data from Trimet', 
+    fill='Station Type'
+  )+
+  scale_fill_manual(values=c('cornflowerblue', 'orange')) +
+  theme(legend.position='none')
+```
