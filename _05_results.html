@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.7.33">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -30,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="_05_results_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="_05_results_files/libs/quarto-html/anchor.min.js"></script>
 <link href="_05_results_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="_05_results_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="_05_results_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="_05_results_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="_05_results_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="_05_results_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -80,13 +80,17 @@ window.Quarto = {
 <h1>Results</h1>
 <section id="ethics-in-action" class="level2">
 <h2 class="anchored" data-anchor-id="ethics-in-action">Ethics in Action</h2>
-<p>Figure X, below, shows the boxplot of minutes between arrival times created to investigate the range of times that could be spent waiting at a transit station.</p>
+<p><a href="#fig-arrival-boxplot" class="quarto-xref">Figure&nbsp;1</a>, below, shows the boxplot of minutes between arrival times created to investigate the range of times that could be spent waiting at a transit station.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="_05_results_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption>Figure X: Boxplots showing the average number of minutes between arrivals at a station, faceted by station type. WES commuter rail stations are combined with bus data, since there are only 6 WES stations in the TriMet system. Data from both weekdays and weekend days is included. Outliers higher than 100 are excluded for a better view of the non-outlier data.</figcaption>
+<div id="fig-arrival-boxplot" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-arrival-boxplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="_05_results_files/figure-html/fig-arrival-boxplot-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arrival-boxplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Boxplots showing the average number of minutes between arrivals at a station, faceted by station type. WES commuter rail stations are combined with bus data, since there are only 6 WES stations in the TriMet system. Data from both weekdays and weekend days is included. Outliers higher than 100 are excluded for a better view of the non-outlier data.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -100,12 +104,12 @@ window.Quarto = {
 </section>
 <section id="machine-learning" class="level2">
 <h2 class="anchored" data-anchor-id="machine-learning">Machine Learning</h2>
-<p>The results of the final random forest model constructed for this project are shown in Figure X. This model had a test RMSE of 0.689 and an <span class="math inline">\(R^2\)</span> value of 0.521, which is middle-of-the-road for regression accuracy.</p>
+<p>The results of the final random forest model constructed for this project are shown in Figure X. This model had a test RMSE of 0.685 and an <span class="math inline">\(R^2\)</span> value of 0.523, which is middle-of-the-road for regression accuracy.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="_05_results_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="_05_results_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
 <figcaption>Figure X: Predicted vs test log-usage values for the best model constructed over the course of this project. This model had an RMSE value of 0.689 and an <span class="math inline">\(R^2\)</span> value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. The vertical lines show where many usage values were transformed into a single log-usage value.</figcaption>
 </figure>
 </div>
@@ -116,7 +120,7 @@ window.Quarto = {
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="_05_results_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="_05_results_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
 <figcaption>Figure X: Residuals of the best regression model constructed over the course of this project. This model had an RMSE value of 0.689 and an <span class="math inline">\(R^2\)</span> value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. This is demostrated by the definite shape of the residuals. The vertical lines show where many usage values were transformed into a single log-usage value.</figcaption>
 </figure>
 </div>
