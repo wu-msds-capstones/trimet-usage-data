@@ -28,9 +28,9 @@ Information about TriMet schedules was, however, slightly more complicated. Sche
 
 ### Database Construction 
 
-The data was organized into four tables: stations, routes, schedule, and usage. Even though the schedules and usage were already separated, we needed to ensure that the route names, station names, and station ids all matched between files. For these reasons, we used an R script to prepare the data for ingestion into the Postgres database. The output was another four csv files that would each correspond to one of the database tables and could be copied in directly. Below (Figure 3) is an Entity Relationship Diagram showing our database organization:
+The data was organized into four tables: stations, routes, schedule, and usage. Even though the schedules and usage were already separated, we needed to ensure that the route names, station names, and station ids all matched between files. For these reasons, we used an R script to prepare the data for ingestion into the Postgres database. The output was another four csv files that would each correspond to one of the database tables and could be copied in directly. Below (@fig-erd) is an Entity Relationship Diagram showing our database organization:
 
-![Figure 3: Entity Relationship Diagram for the database constructed in this project.](erd.png)
+![Entity Relationship Diagram for the database constructed in this project.](erd.png){#fig-erd}
 
 Stations and routes each have their own table, and are connected by two junction tables, schedule and usage. Each route is defined as a series of stations going a specific direction on a specific day. The usage table gives a total usage statistic for a specific station on a specific route. Alternatively, you can use the usage_id to select a station-route combination. This is useful within the schedule table, where the same route_id and station_id can have multiple arrival times in a schedule. This ensures third normal form because each table has a primary key and each non-key attribute depends solely on the key.
 
@@ -50,9 +50,10 @@ It’s possible that Poisson regression is not the correct statistical model to 
 
 ## Machine Learning 
 
-Because of the left-skewed distributions of the usage values in this dataset (seen in Figure X), the usage values had to be log-transformed to act as good target values. The resulting distribution of this transformation can be seen in Figure X. There were 1,571 stations that had usage values of 0 and thus produced invalid log-transformed values. These stations were excluded from the regressions undertaken in this project. 
+Because of the left-skewed distributions of the usage values in this dataset (seen in @fig-usage-dist), the usage values had to be log-transformed to act as good target values. The resulting distribution of this transformation can be seen in @fig-log-dist. There were 1,571 stations that had usage values of 0 and thus produced invalid log-transformed values. These stations were excluded from the regressions undertaken in this project. 
 
 ```{r, echo=F, message=F}
+#| label: fig-log-dist
 #| fig-cap: 'Figure X: Distributions of Log-transformed usage values, by station type. These were the values used as targets for the regressions in this project. 1,571 stations had invalid log-transformed usage values due to an original usage value of 0, and are excluded from this plot.'
 ggplot(data=stop_features_plot, aes(x=log(total_usage), fill=stop_type)) + 
   geom_histogram() +
@@ -68,6 +69,6 @@ ggplot(data=stop_features_plot, aes(x=log(total_usage), fill=stop_type)) +
   scale_fill_manual(values=c('cornflowerblue', 'orange', 'blue3'))
 ```
 
-This project used regression models in an attempt to predict station usage numbers from the engineered features described earlier in this paper. The inputs given to each model as independent variables were the number of unique routes that stop at the station, the earliest and latest times the station is used, the number of vehicles that stop at the station over the course of the day, and the average number of minutes separating arrivals at the station, as well as a Boolean value for day of the week and a Boolean value indicating whether each station is a MAX station. These inputs were used to predict the log-transformed usage values of each station. 
+This project used regression models in an attempt to predict station usage numbers from the engineered features described earlier in this paper. The inputs given to each model as independent variables were the number of unique routes that stop at the station, the earliest and latest times the station is used, and the average number of minutes separating arrivals at the station, as well as a Boolean value for day of the week and a Boolean value indicating whether each station is a MAX station. The number of vehicles that stop at the station was not used, as it had a correlation coefficient of 0.677 with the number of routes, which indicated colinearity. These inputs were used to predict the log-transformed usage values of each station. 
 
 The models investigated increased in complexity from standard linear regression through a variety of Support Vector Machine kernels to random forest regression and a multi-layer perceptron. The random forest model was determined to have the best performance on this dataset, and as such will be the main model discussed in this report. The final, best-performing random forest had 100 trees and a tune length of 3, and was trained using 3-fold cross-validation. 

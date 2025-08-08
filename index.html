@@ -101,6 +101,7 @@ window.Quarto = {
 <meta name="citation_reference" content="citation_title=Stops &amp;amp;amp; stations;,citation_author=undefined TriMet;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://trimet.org/ride/stop_select_form.html;,citation_publisher=TriMet;">
 <meta name="citation_reference" content="citation_title=TriMet ridership;,citation_author=undefined TriMet;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_fulltext_html_url=https://trimet.org/about/performance.htm#ridership;,citation_publisher=TriMet;">
 <meta name="citation_reference" content="citation_title=TriMet passenger census - spring 2025_2025;,citation_author=undefined TriMet;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_publisher=TriMet;">
+<meta name="citation_reference" content="citation_title=American community survey 5-year estimates: Comparison profiles 5-year,;,citation_author=U. S. Census Bureau;,citation_publication_date=2024;,citation_cover_date=2024;,citation_year=2024;,citation_fulltext_html_url=http://api.census.gov/data/2024/acs/acs5;,citation_publisher=U.S. Census Bureau;">
 </head>
 
 <body class="quarto-light"><script id="quarto-html-before-body" type="application/javascript">
@@ -371,13 +372,17 @@ window.Quarto = {
 <section id="data" class="level1">
 <h1>Data</h1>
 <p>The final dataset constructed for the analysis done in this project is a combination of the usage and schedule raw data files, described in the next section. It has 10 columns, seven of which are independent variables. The dataset also contains one dependent variable and two descriptors about each station. The unit of interest is a station, so each row in the final table describes a station. Each station stop is described by its ID in the TriMet system as well as the name of the station, which is typically related to its location in some way. Transit centers and street intersections are common name formats. Each station has associated with it a combined usage number across all the routes that stop there, including both onboardings and disembarkings. This usage total acts as our dependent variable. Independent variables engineered from the schedule data (see <em>Feature Engineering</em>) are as follows: number of routes that stop at the station, the earliest and latest arrivals at that station, the number of unique vehicles that arrive at the station over the course of the day, and the average number of minutes between arrivals. These values are calculated for both weekdays and weekend days, since the schedules can vary between weekdays and the weekend. Some routes do not run on the weekends, and thus only have weekday information given. Weekday information has a Boolean day value of 0, and weekend information has a value of 1. A final variable included in our dataset is a Boolean indicator of if a certain station is a MAX station. This was encoded the same way day of the week was: with a 0 for non-MAX stations, and a value of 1 for MAX stations.</p>
-<p>The distribution of usage by station type can be seen in Figure X. There are only 6 WES commuter rail stations in the TriMet system, so they were combined with the bus stations because they have usage numbers in the same range. Many stations in this dataset have low usage numbers: bus and WES station usage has a mean value of 19.52 and a median of 5. This combined category includes 10,859 entries across two day values. MAX stations are a subset of the dataset, consisting of only 367 entries across two days, but tend to have higher usage. The mean usage value of MAX stations is 340.3, and the median is 239.0.</p>
-<div class="cell">
+<p>The distribution of usage by station type can be seen in <a href="#fig-usage-dist" class="quarto-xref">Figure&nbsp;1</a>. There are only 6 WES commuter rail stations in the TriMet system, so they were combined with the bus stations because they have usage numbers in the same range. Many stations in this dataset have low usage numbers: bus and WES station usage has a mean value of 19.52 and a median of 5. This combined category includes 10,859 entries across two day values. MAX stations are a subset of the dataset, consisting of only 367 entries across two days, but tend to have higher usage. The mean usage value of MAX stations is 340.3, and the median is 239.0.</p>
+<div id="cell-fig-usage-dist" class="cell">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="capstone_files/figure-html/unnamed-chunk-5-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure X: Distributions of usage values for each station type. WES and bus stations are combined due to the low number of WES stations in the dataset. Note that the y-axis is not fixed: there are a much smaller number of MAX stations than there are bus stations."><img src="capstone_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672" alt="Figure X: Distributions of usage values for each station type. WES and bus stations are combined due to the low number of WES stations in the dataset. Note that the y-axis is not fixed: there are a much smaller number of MAX stations than there are bus stations."></a></p>
-<figcaption>Figure X: Distributions of usage values for each station type. WES and bus stations are combined due to the low number of WES stations in the dataset. Note that the y-axis is <em>not</em> fixed: there are a much smaller number of MAX stations than there are bus stations.</figcaption>
+<div id="fig-usage-dist" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-usage-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="capstone_files/figure-html/fig-usage-dist-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Distributions of usage values for each station type. WES and bus stations are combined due to the low number of WES stations in the dataset. Note that the y-axis is not fixed: there are a much smaller number of MAX stations than there are bus stations."><img src="capstone_files/figure-html/fig-usage-dist-1.png" class="img-fluid figure-img" width="672"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-usage-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Distributions of usage values for each station type. WES and bus stations are combined due to the low number of WES stations in the dataset. Note that the y-axis is <em>not</em> fixed: there are a much smaller number of MAX stations than there are bus stations.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -395,11 +400,15 @@ window.Quarto = {
 </section>
 <section id="database-construction" class="level3">
 <h3 class="anchored" data-anchor-id="database-construction">Database Construction</h3>
-<p>The data was organized into four tables: stations, routes, schedule, and usage. Even though the schedules and usage were already separated, we needed to ensure that the route names, station names, and station ids all matched between files. For these reasons, we used an R script to prepare the data for ingestion into the Postgres database. The output was another four csv files that would each correspond to one of the database tables and could be copied in directly. Below (Figure 3) is an Entity Relationship Diagram showing our database organization:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="erd.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure 3: Entity Relationship Diagram for the database constructed in this project."><img src="erd.png" class="img-fluid figure-img" alt="Figure 3: Entity Relationship Diagram for the database constructed in this project."></a></p>
-<figcaption>Figure 3: Entity Relationship Diagram for the database constructed in this project.</figcaption>
+<p>The data was organized into four tables: stations, routes, schedule, and usage. Even though the schedules and usage were already separated, we needed to ensure that the route names, station names, and station ids all matched between files. For these reasons, we used an R script to prepare the data for ingestion into the Postgres database. The output was another four csv files that would each correspond to one of the database tables and could be copied in directly. Below (<a href="#fig-erd" class="quarto-xref">Figure&nbsp;2</a>) is an Entity Relationship Diagram showing our database organization:</p>
+<div id="fig-erd" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-erd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="erd.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Entity Relationship Diagram for the database constructed in this project."><img src="erd.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-erd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Entity Relationship Diagram for the database constructed in this project.
+</figcaption>
 </figure>
 </div>
 <p>Stations and routes each have their own table, and are connected by two junction tables, schedule and usage. Each route is defined as a series of stations going a specific direction on a specific day. The usage table gives a total usage statistic for a specific station on a specific route. Alternatively, you can use the usage_id to select a station-route combination. This is useful within the schedule table, where the same route_id and station_id can have multiple arrival times in a schedule. This ensures third normal form because each table has a primary key and each non-key attribute depends solely on the key.</p>
@@ -420,18 +429,22 @@ window.Quarto = {
 </section>
 <section id="machine-learning" class="level2">
 <h2 class="anchored" data-anchor-id="machine-learning">Machine Learning</h2>
-<p>Because of the left-skewed distributions of the usage values in this dataset (seen in Figure X), the usage values had to be log-transformed to act as good target values. The resulting distribution of this transformation can be seen in Figure X. There were 1,571 stations that had usage values of 0 and thus produced invalid log-transformed values. These stations were excluded from the regressions undertaken in this project.</p>
-<div class="cell">
+<p>Because of the left-skewed distributions of the usage values in this dataset (seen in <a href="#fig-usage-dist" class="quarto-xref">Figure&nbsp;1</a>), the usage values had to be log-transformed to act as good target values. The resulting distribution of this transformation can be seen in <a href="#fig-log-dist" class="quarto-xref">Figure&nbsp;3</a>. There were 1,571 stations that had usage values of 0 and thus produced invalid log-transformed values. These stations were excluded from the regressions undertaken in this project.</p>
+<div id="cell-fig-log-dist" class="cell">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="capstone_files/figure-html/unnamed-chunk-8-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure X: Distributions of Log-transformed usage values, by station type. These were the values used as targets for the regressions in this project. 1,571 stations had invalid log-transformed usage values due to an original usage value of 0, and are excluded from this plot."><img src="capstone_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672" alt="Figure X: Distributions of Log-transformed usage values, by station type. These were the values used as targets for the regressions in this project. 1,571 stations had invalid log-transformed usage values due to an original usage value of 0, and are excluded from this plot."></a></p>
-<figcaption>Figure X: Distributions of Log-transformed usage values, by station type. These were the values used as targets for the regressions in this project. 1,571 stations had invalid log-transformed usage values due to an original usage value of 0, and are excluded from this plot.</figcaption>
+<div id="fig-log-dist" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-log-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="capstone_files/figure-html/fig-log-dist-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Figure X: Distributions of Log-transformed usage values, by station type. These were the values used as targets for the regressions in this project. 1,571 stations had invalid log-transformed usage values due to an original usage value of 0, and are excluded from this plot."><img src="capstone_files/figure-html/fig-log-dist-1.png" class="img-fluid figure-img" width="672"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-log-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Figure X: Distributions of Log-transformed usage values, by station type. These were the values used as targets for the regressions in this project. 1,571 stations had invalid log-transformed usage values due to an original usage value of 0, and are excluded from this plot.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>This project used regression models in an attempt to predict station usage numbers from the engineered features described earlier in this paper. The inputs given to each model as independent variables were the number of unique routes that stop at the station, the earliest and latest times the station is used, the number of vehicles that stop at the station over the course of the day, and the average number of minutes separating arrivals at the station, as well as a Boolean value for day of the week and a Boolean value indicating whether each station is a MAX station. These inputs were used to predict the log-transformed usage values of each station.</p>
+<p>This project used regression models in an attempt to predict station usage numbers from the engineered features described earlier in this paper. The inputs given to each model as independent variables were the number of unique routes that stop at the station, the earliest and latest times the station is used, and the average number of minutes separating arrivals at the station, as well as a Boolean value for day of the week and a Boolean value indicating whether each station is a MAX station. The number of vehicles that stop at the station was not used, as it had a correlation coefficient of 0.677 with the number of routes, which indicated colinearity. These inputs were used to predict the log-transformed usage values of each station.</p>
 <p>The models investigated increased in complexity from standard linear regression through a variety of Support Vector Machine kernels to random forest regression and a multi-layer perceptron. The random forest model was determined to have the best performance on this dataset, and as such will be the main model discussed in this report. The final, best-performing random forest had 100 trees and a tune length of 3, and was trained using 3-fold cross-validation.</p>
 </section>
 </section>
@@ -439,18 +452,22 @@ window.Quarto = {
 <h1>Results</h1>
 <section id="ethics-in-action-1" class="level2">
 <h2 class="anchored" data-anchor-id="ethics-in-action-1">Ethics in Action</h2>
-<p>Figure X, below, shows the boxplot of minutes between arrival times created to investigate the range of times that could be spent waiting at a transit station.</p>
-<div class="cell">
+<p><a href="#fig-arrival-boxplot" class="quarto-xref">Figure&nbsp;4</a>, below, shows the boxplot of minutes between arrival times created to investigate the range of times that could be spent waiting at a transit station.</p>
+<div id="cell-fig-arrival-boxplot" class="cell">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="capstone_files/figure-html/unnamed-chunk-12-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure X: Boxplots showing the average number of minutes between arrivals at a station, faceted by station type. WES commuter rail stations are combined with bus data, since there are only 6 WES stations in the TriMet system. Data from both weekdays and weekend days is included. Outliers higher than 100 are excluded for a better view of the non-outlier data."><img src="capstone_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672" alt="Figure X: Boxplots showing the average number of minutes between arrivals at a station, faceted by station type. WES commuter rail stations are combined with bus data, since there are only 6 WES stations in the TriMet system. Data from both weekdays and weekend days is included. Outliers higher than 100 are excluded for a better view of the non-outlier data."></a></p>
-<figcaption>Figure X: Boxplots showing the average number of minutes between arrivals at a station, faceted by station type. WES commuter rail stations are combined with bus data, since there are only 6 WES stations in the TriMet system. Data from both weekdays and weekend days is included. Outliers higher than 100 are excluded for a better view of the non-outlier data.</figcaption>
+<div id="fig-arrival-boxplot" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-arrival-boxplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="capstone_files/figure-html/fig-arrival-boxplot-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Boxplots showing the average number of minutes between arrivals at a station, faceted by station type. WES commuter rail stations are combined with bus data, since there are only 6 WES stations in the TriMet system. Data from both weekdays and weekend days is included. Outliers higher than 100 are excluded for a better view of the non-outlier data."><img src="capstone_files/figure-html/fig-arrival-boxplot-1.png" class="img-fluid figure-img" width="672"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arrival-boxplot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Boxplots showing the average number of minutes between arrivals at a station, faceted by station type. WES commuter rail stations are combined with bus data, since there are only 6 WES stations in the TriMet system. Data from both weekdays and weekend days is included. Outliers higher than 100 are excluded for a better view of the non-outlier data.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>20 minutes is often considered a reasonable maximum time to wait at a transit stop between arrivals. However, it can be seen in Figure X that only the MAX lines run every 15-20 minutes regularly, and that only half of the buses by quartile are 25 minutes or less. The third quartile of the bus and WES commuter rail stations goes up over 60 minutes. More than an hour is a long time to wait at a transit stop. This illustrates just one of many ethical considerations that must be taken into account when designing a transit system–or even simply running one, as TriMet is doing. It also goes some way in explaining why many TriMet stations see as little usage as they do.</p>
+<p>20 minutes is often considered a reasonable maximum time to wait at a transit stop between arrivals. However, it can be seen in <a href="#fig-arrival-boxplot" class="quarto-xref">Figure&nbsp;4</a> that only the MAX lines run every 15-20 minutes regularly, and that only half of the buses by quartile are 25 minutes or less. The third quartile of the bus and WES commuter rail stations goes up over 60 minutes. More than an hour is a long time to wait at a transit stop. This illustrates just one of many ethical considerations that must be taken into account when designing a transit system–or even simply running one, as TriMet is doing. It also goes some way in explaining why many TriMet stations see as little usage as they do.</p>
 </section>
 <section id="statistical-modeling-1" class="level2">
 <h2 class="anchored" data-anchor-id="statistical-modeling-1">Statistical Modeling</h2>
@@ -459,24 +476,32 @@ window.Quarto = {
 </section>
 <section id="machine-learning-1" class="level2">
 <h2 class="anchored" data-anchor-id="machine-learning-1">Machine Learning</h2>
-<p>The results of the final random forest model constructed for this project are shown in Figure X. This model had a test RMSE of 0.689 and an <span class="math inline">\(R^2\)</span> value of 0.521, which is middle-of-the-road for regression accuracy.</p>
-<div class="cell">
+<p>The results of the final random forest model constructed for this project are shown in <a href="#fig-ml" class="quarto-xref">Figure&nbsp;5</a>. This model had a test RMSE of 0.685 and an <span class="math inline">\(R^2\)</span> value of 0.523, which is middle-of-the-road for regression accuracy.</p>
+<div id="cell-fig-ml" class="cell">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="capstone_files/figure-html/unnamed-chunk-13-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure X: Predicted vs test log-usage values for the best model constructed over the course of this project. This model had an RMSE value of 0.689 and an R^2 value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. The vertical lines show where many usage values were transformed into a single log-usage value."><img src="capstone_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672" alt="Figure X: Predicted vs test log-usage values for the best model constructed over the course of this project. This model had an RMSE value of 0.689 and an R^2 value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. The vertical lines show where many usage values were transformed into a single log-usage value."></a></p>
-<figcaption>Figure X: Predicted vs test log-usage values for the best model constructed over the course of this project. This model had an RMSE value of 0.689 and an <span class="math inline">\(R^2\)</span> value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. The vertical lines show where many usage values were transformed into a single log-usage value.</figcaption>
+<div id="fig-ml" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ml-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="capstone_files/figure-html/fig-ml-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: Predicted vs test log-usage values for the best model constructed over the course of this project. This model had an RMSE value of 0.689 and an R^2 value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. The vertical lines show where many usage values were transformed into a single log-usage value."><img src="capstone_files/figure-html/fig-ml-1.png" class="img-fluid figure-img" width="672"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ml-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Predicted vs test log-usage values for the best model constructed over the course of this project. This model had an RMSE value of 0.689 and an <span class="math inline">\(R^2\)</span> value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. The vertical lines show where many usage values were transformed into a single log-usage value.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>As can be seen distinctly in the residuals of this model (shown in Figure X) the random forest has a tendency to over-predict at low log-usage values, where much of the data is concentrated, and under-predict at high log-usage values–though it evens out at very high log-usage values, between 2 and 3. This is likely a result of the log-transform assigning many usage values to a single log-usage value. The vertical lines seen between -2 and 0 are good evidence of this: the model is trying to predict a range of values, but the transform means they’re all a single value.</p>
-<div class="cell">
+<p>As can be seen distinctly in the residuals of this model (shown in <a href="#fig-ml-resid" class="quarto-xref">Figure&nbsp;6</a>) the random forest has a tendency to over-predict at low log-usage values, where much of the data is concentrated, and under-predict at high log-usage values–though it evens out at very high log-usage values, between 2 and 3. This is likely a result of the log-transform assigning many usage values to a single log-usage value. The vertical lines seen between -2 and 0 are good evidence of this: the model is trying to predict a range of values, but the transform means they’re all a single value.</p>
+<div id="cell-fig-ml-resid" class="cell">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="capstone_files/figure-html/unnamed-chunk-14-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figure X: Residuals of the best regression model constructed over the course of this project. This model had an RMSE value of 0.689 and an R^2 value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. This is demostrated by the definite shape of the residuals. The vertical lines show where many usage values were transformed into a single log-usage value."><img src="capstone_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672" alt="Figure X: Residuals of the best regression model constructed over the course of this project. This model had an RMSE value of 0.689 and an R^2 value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. This is demostrated by the definite shape of the residuals. The vertical lines show where many usage values were transformed into a single log-usage value."></a></p>
-<figcaption>Figure X: Residuals of the best regression model constructed over the course of this project. This model had an RMSE value of 0.689 and an <span class="math inline">\(R^2\)</span> value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. This is demostrated by the definite shape of the residuals. The vertical lines show where many usage values were transformed into a single log-usage value.</figcaption>
+<div id="fig-ml-resid" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ml-resid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="capstone_files/figure-html/fig-ml-resid-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figure&nbsp;6: Residuals of the best regression model constructed over the course of this project. This model had an RMSE value of 0.689 and an R^2 value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. This is demostrated by the definite shape of the residuals. The vertical lines show where many usage values were transformed into a single log-usage value."><img src="capstone_files/figure-html/fig-ml-resid-1.png" class="img-fluid figure-img" width="672"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ml-resid-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Residuals of the best regression model constructed over the course of this project. This model had an RMSE value of 0.689 and an <span class="math inline">\(R^2\)</span> value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. This is demostrated by the definite shape of the residuals. The vertical lines show where many usage values were transformed into a single log-usage value.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -488,28 +513,37 @@ window.Quarto = {
 <h1>Conclusions</h1>
 <p>Over the course of this project, we went through the data collection and engineering process as well as modeling usage using statistical and machine learning-based regressions. Two types of data were collected from the TriMet website: usage information by station for Spring 2025, and schedule information for each station. These values were uploaded into a database, as well as transformed into a number of features for use in predicting the usage value of a station.</p>
 <p>We experimented with multiple Poisson regression models, but ultimately weren’t able to generate accurate predictions. Plotting usage against predicted usage shows a scatterplot of points randomly spread on either side of the y=x diagonal line. Additionally, the summary of the model shows that each variable has negligible effects on usage. It’s possible that a different statistical model should be used, but more likely that the features we created are simply not good predictors of usage.</p>
-<p>[TALK ABOUT THE MACHINE LEARNING MODELS]</p>
+<p>We created a number of machine learning models that predicted station usage from the features engineered for this data set. The best model we found, a random forest, had a test RMSE of 0.685 and an <span class="math inline">\(R^2\)</span> value of 0.523. This model is further illustrated in <a href="#fig-ml" class="quarto-xref">Figure&nbsp;5</a>. The model consistently over-predicted values in the low-usage range and under-predicted values in the high-usage range. The low-usage overprediction is likely a result of the log-transform (as can be seen in <a href="#fig-ml" class="quarto-xref">Figure&nbsp;5</a>). Overall, this model can be used to provide estimates, but more data is required before it can be used for meaningful analysis.</p>
 <section id="future-work" class="level2">
 <h2 class="anchored" data-anchor-id="future-work">Future Work</h2>
 <p>In some ways, the fact that schedule information alone is not particularly predictive of usage is not a surprising discovery. Future work done on this problem would benefit highly from the inclusion of accurate location data for each station stop, which was unfortunately not easily available within the timeframe of this project. Potential inclusions beyond merely location data could be information that provides context to the neighborhood the station is in: how many people live within a certain radius, is this station part of a transit center or not, is there parking available nearby? and other possible questions that would allow for a holistic understanding of the station, rather than merely focusing on the schedule as set up by TriMet.</p>
 <p>We were able to conduct a small amount of preliminary analysis that indicates location data would be a meaningful predictor in future models.</p>
-<p>Another capstone group kindly allowed us to use their data that provides coordinates of intersections in downtown Portland, which we were able to use to cross-reference our stations with names in “Street Name &amp; Street Name” format, of which there were 4,706 that overlapped with the reference table we had access to. Unfortunately, the cross-referencing strategy used was not always reliable, and as such stations were not always assigned the correct coordinates. This particular location dataset had minimal, if any, effect on models trained using it. However, we were able to use this location dataset to produce Figure X, below, which shows that high-usage stations are often clustered together. This leads us to believe that a correctly-gathered location dataset would in fact make a good predictor in future models.</p>
-<div class="cell">
+<p>Another capstone group kindly allowed us to use their data that provides coordinates of intersections in downtown Portland, which we were able to use to cross-reference our stations with names in “Street Name &amp; Street Name” format, of which there were 4,706 that overlapped with the reference table we had access to. Unfortunately, the cross-referencing strategy used was not always reliable, and as such stations were not always assigned the correct coordinates. This particular location dataset had minimal, if any, effect on models trained using it. However, we were able to use this location dataset to produce <a href="#fig-loc-map" class="quarto-xref">Figure&nbsp;7</a>, below, which shows that high-usage stations are often clustered together. This leads us to believe that a correctly-gathered location dataset would in fact make a good predictor in future models.</p>
+<div id="cell-fig-loc-map" class="cell">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="capstone_files/figure-html/unnamed-chunk-30-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure X: A map of bus station usage by location, using our cross-referenced location dataset. While this dataset was not reliable enough to be used in the models constructed for this project, it can be used to show that high-usage stations are clustered in specific areas, and potentially even along specific lines."><img src="capstone_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672" alt="Figure X: A map of bus station usage by location, using our cross-referenced location dataset. While this dataset was not reliable enough to be used in the models constructed for this project, it can be used to show that high-usage stations are clustered in specific areas, and potentially even along specific lines."></a></p>
-<figcaption>Figure X: A map of bus station usage by location, using our cross-referenced location dataset. While this dataset was not reliable enough to be used in the models constructed for this project, it can be used to show that high-usage stations are clustered in specific areas, and potentially even along specific lines.</figcaption>
+<div id="fig-loc-map" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-loc-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="capstone_files/figure-html/fig-loc-map-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure&nbsp;7: A map of bus station usage by location, using our cross-referenced location dataset. While this dataset was not reliable enough to be used in the models constructed for this project, it can be used to show that high-usage stations are clustered in specific areas, and potentially even along specific lines."><img src="capstone_files/figure-html/fig-loc-map-1.png" class="img-fluid figure-img" width="672"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-loc-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: A map of bus station usage by location, using our cross-referenced location dataset. While this dataset was not reliable enough to be used in the models constructed for this project, it can be used to show that high-usage stations are clustered in specific areas, and potentially even along specific lines.
+</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<p>In the later stages of our analysis, we found that there is in fact a way to extract TriMet stop locations from the maps provided on the TriMet website. It was too involved to be able to webscrape within the time restrictions of this project, but we manually extracted the locations of the 5 MAX and bus stations with the highest and lowest usage, resulting in a dataset of 20 stations with location information. This dataset was combined with population information retrieved from the 2024 American Community Survey to produce Figure X. It can be seen that population has an effect on transit usage as well: the cluster of stations in the bottom left of Figure X at the Clackamas Town Center are very near a high-population area. It can also be seen that most of the lowest-usage bus stations are clustered together in a relatively low-population census tract. Additionally, two of the highest-usage MAX stations are close together in the Portland downtown. Figure X provides a compelling argument for the inclusion of location and neighborhood context data in any future investigation of this topic.</p>
-<div class="cell">
+<p>In the later stages of our analysis, we found that there is in fact a way to extract TriMet stop locations from the maps provided on the TriMet website. It was too involved to be able to webscrape within the time restrictions of this project, but we manually extracted the locations of the 5 MAX and bus stations with the highest and lowest usage, resulting in a dataset of 20 stations with location information. This dataset was combined with population information retrieved from the 2024 American Community Survey <span class="citation" data-cites="acs">(<a href="#ref-acs" role="doc-biblioref">Bureau 2024</a>)</span> to produce <a href="#fig-loc-pop" class="quarto-xref">Figure&nbsp;8</a>. It can be seen that population has an effect on transit usage as well: the cluster of stations in the bottom left of <a href="#fig-loc-pop" class="quarto-xref">Figure&nbsp;8</a> at the Clackamas Town Center are very near a high-population area. It can also be seen that most of the lowest-usage bus stations are clustered together in a relatively low-population census tract. Additionally, two of the highest-usage MAX stations are close together in the Portland downtown. <a href="#fig-loc-pop" class="quarto-xref">Figure&nbsp;8</a> provides a compelling argument for the inclusion of location and neighborhood context data in any future investigation of this topic.</p>
+<div id="cell-fig-loc-pop" class="cell">
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="capstone_files/figure-html/unnamed-chunk-31-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="capstone_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></a></p>
+<div id="fig-loc-pop" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-loc-pop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="capstone_files/figure-html/fig-loc-pop-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="Figure&nbsp;8: The top 5 highest and lowest-usage MAX stations (circles) and bus stations (triangles), overlaid on cencus tract population estimates from the 2024 ACS. The clusters of high- and low-usage stations provide a compelling argument for location (and other neighborhood information) as a predictor for usage."><img src="capstone_files/figure-html/fig-loc-pop-1.png" class="img-fluid figure-img" width="672"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-loc-pop-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: The top 5 highest and lowest-usage MAX stations (circles) and bus stations (triangles), overlaid on cencus tract population estimates from the 2024 ACS. The clusters of high- and low-usage stations provide a compelling argument for location (and other neighborhood information) as a predictor for usage.
+</figcaption>
 </figure>
 </div>
 </div>
@@ -523,6 +557,9 @@ window.Quarto = {
 <section id="references" class="level1">
 <h1>References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-acs" class="csl-entry" role="listitem">
+Bureau, U. S. Census. 2024. <span>“American Community Survey 5-Year Estimates: Comparison Profiles 5-Year,”</span> U.S. Census Bureau. <a href="http://api.census.gov/data/2024/acs/acs5">http://api.census.gov/data/2024/acs/acs5</a>.
+</div>
 <div id="ref-trimet_stop" class="csl-entry" role="listitem">
 TriMet. 2025a. <span>“Stop ID 9848 - Hatfield Government Center MAX Station.”</span> TriMet. <a href="https://trimet.org/ride/stop_schedule.html?stop_id=9848&amp;month=8&amp;day=4&amp;route=100">https://trimet.org/ride/stop_schedule.html?stop_id=9848&amp;month=8&amp;day=4&amp;route=100</a>.
 </div>

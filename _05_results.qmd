@@ -20,10 +20,11 @@ stop_features_plot = stop_features %>% mutate(
 
 ## Ethics in Action 
 
-Figure X, below, shows the boxplot of minutes between arrival times created to investigate the range of times that could be spent waiting at a transit station. 
+@fig-arrival-boxplot, below, shows the boxplot of minutes between arrival times created to investigate the range of times that could be spent waiting at a transit station. 
 
 ```{r, echo=F, warning=F}
-#| fig-cap: 'Figure X: Boxplots showing the average number of minutes between arrivals at a station, faceted by station type. WES commuter rail stations are combined with bus data, since there are only 6 WES stations in the TriMet system. Data from both weekdays and weekend days is included. Outliers higher than 100 are excluded for a better view of the non-outlier data.'
+#| label: fig-arrival-boxplot
+#| fig-cap: 'Boxplots showing the average number of minutes between arrivals at a station, faceted by station type. WES commuter rail stations are combined with bus data, since there are only 6 WES stations in the TriMet system. Data from both weekdays and weekend days is included. Outliers higher than 100 are excluded for a better view of the non-outlier data.'
 ggplot(data=stop_features_plot, aes(x=arrival_diff, fill=stop_type)) + 
   geom_boxplot() +
   xlim(0, 100) + 
@@ -42,7 +43,7 @@ ggplot(data=stop_features_plot, aes(x=arrival_diff, fill=stop_type)) +
   scale_fill_manual(values=c('cornflowerblue', 'orange', 'blue3'))
 ```
 
-20 minutes is often considered a reasonable maximum time to wait at a transit stop between arrivals. However, it can be seen in Figure X that only the MAX lines run every 15-20 minutes regularly, and that only half of the buses by quartile are 25 minutes or less. The third quartile of the bus and WES commuter rail stations goes up over 60 minutes. More than an hour is a long time to wait at a transit stop. 
+20 minutes is often considered a reasonable maximum time to wait at a transit stop between arrivals. However, it can be seen in @fig-arrival-boxplot that only the MAX lines run every 15-20 minutes regularly, and that only half of the buses by quartile are 25 minutes or less. The third quartile of the bus and WES commuter rail stations goes up over 60 minutes. More than an hour is a long time to wait at a transit stop. 
 This illustrates just one of many ethical considerations that must be taken into account when designing a transit system–or even simply running one, as TriMet is doing. It also goes some way in explaining why many TriMet stations see as little usage as they do. 
 
 ## Statistical Modeling 
@@ -54,10 +55,11 @@ Another model uses only the number of routes feature. This performed only slight
 
 ## Machine Learning 
 
-The results of the final random forest model constructed for this project are shown in Figure X. This model had a test RMSE of 0.689 and an $R^2$ value of 0.521, which is middle-of-the-road for regression accuracy. 
+The results of the final random forest model constructed for this project are shown in @fig-ml. This model had a test RMSE of 0.685 and an $R^2$ value of 0.523, which is middle-of-the-road for regression accuracy. 
 
 ```{r, echo=F}
-#| fig-cap: 'Figure X: Predicted vs test log-usage values for the best model constructed over the course of this project. This model had an RMSE value of 0.689 and an $R^2$ value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. The vertical lines show where many usage values were transformed into a single log-usage value.'
+#| label: fig-ml
+#| fig-cap: 'Predicted vs test log-usage values for the best model constructed over the course of this project. This model had an RMSE value of 0.689 and an $R^2$ value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. The vertical lines show where many usage values were transformed into a single log-usage value.'
 rf_plot = ggplot(rf_data) + 
   geom_point(aes(x=log_usage, y=rf_pred, alpha=0.5)) + 
   geom_line(aes(x=log_usage, y=log_usage), colour='blue') + 
@@ -77,10 +79,11 @@ rf_plot = ggplot(rf_data) +
 rf_plot
 ```
 
-As can be seen distinctly in the residuals of this model (shown in Figure X) the random forest has a tendency to over-predict at low log-usage values, where much of the data is concentrated, and under-predict at high log-usage values--though it evens out at very high log-usage values, between 2 and 3. This is likely a result of the log-transform assigning many usage values to a single log-usage value. The vertical lines seen between -2 and 0 are good evidence of this: the model is trying to predict a range of values, but the transform means they're all a single value. 
+As can be seen distinctly in the residuals of this model (shown in @fig-ml-resid) the random forest has a tendency to over-predict at low log-usage values, where much of the data is concentrated, and under-predict at high log-usage values--though it evens out at very high log-usage values, between 2 and 3. This is likely a result of the log-transform assigning many usage values to a single log-usage value. The vertical lines seen between -2 and 0 are good evidence of this: the model is trying to predict a range of values, but the transform means they're all a single value. 
 
 ```{r, echo=F}
-#| fig-cap: 'Figure X: Residuals of the best regression model constructed over the course of this project. This model had an RMSE value of 0.689 and an $R^2$ value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. This is demostrated by the definite shape of the residuals. The vertical lines show where many usage values were transformed into a single log-usage value.'
+#| label: fig-ml-resid
+#| fig-cap: 'Residuals of the best regression model constructed over the course of this project. This model had an RMSE value of 0.689 and an $R^2$ value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. This is demostrated by the definite shape of the residuals. The vertical lines show where many usage values were transformed into a single log-usage value.'
 rf_resid = ggplot(rf_data) + 
   geom_point(aes(x=log_usage, y = log_usage - rf_pred), alpha=0.5) + 
   geom_hline(aes(yintercept = 0), color='blue') + 

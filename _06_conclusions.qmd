@@ -117,7 +117,7 @@ Over the course of this project, we went through the data collection and enginee
 
 We experimented with multiple Poisson regression models, but ultimately weren’t able to generate accurate predictions. Plotting usage against predicted usage shows a scatterplot of points randomly spread on either side of the y=x diagonal line. Additionally, the summary of the model shows that each variable has negligible effects on usage. It’s possible that a different statistical model should be used, but more likely that the features we created are simply not good predictors of usage.
 
-[TALK ABOUT THE MACHINE LEARNING MODELS]
+We created a number of machine learning models that predicted station usage from the features engineered for this data set. The best model we found, a random forest, had a test RMSE of 0.685 and an $R^2$ value of 0.523. This model is further illustrated in @fig-ml. The model consistently over-predicted values in the low-usage range and under-predicted values in the high-usage range. The low-usage overprediction is likely a result of the log-transform (as can be seen in @fig-ml). Overall, this model can be used to provide estimates, but more data is required before it can be used for meaningful analysis. 
 
 ## Future Work 
 
@@ -125,10 +125,11 @@ In some ways, the fact that schedule information alone is not particularly predi
 
 We were able to conduct a small amount of preliminary analysis that indicates location data would be a meaningful predictor in future models. 
 
-Another capstone group kindly allowed us to use their data that provides coordinates of intersections in downtown Portland, which we were able to use to cross-reference our stations with names in "Street Name & Street Name" format, of which there were 4,706 that overlapped with the reference table we had access to. Unfortunately, the cross-referencing strategy used was not always reliable, and as such stations were not always assigned the correct coordinates. This particular location dataset had minimal, if any, effect on models trained using it. However, we were able to use this location dataset to produce Figure X, below, which shows that high-usage stations are often clustered together. This leads us to believe that a correctly-gathered location dataset would in fact make a good predictor in future models. 
+Another capstone group kindly allowed us to use their data that provides coordinates of intersections in downtown Portland, which we were able to use to cross-reference our stations with names in "Street Name & Street Name" format, of which there were 4,706 that overlapped with the reference table we had access to. Unfortunately, the cross-referencing strategy used was not always reliable, and as such stations were not always assigned the correct coordinates. This particular location dataset had minimal, if any, effect on models trained using it. However, we were able to use this location dataset to produce @fig-loc-map, below, which shows that high-usage stations are often clustered together. This leads us to believe that a correctly-gathered location dataset would in fact make a good predictor in future models. 
 
 ```{r, echo=F}
-#| fig-cap: 'Figure X: A map of bus station usage by location, using our cross-referenced location dataset. While this dataset was not reliable enough to be used in the models constructed for this project, it can be used to show that high-usage stations are clustered in specific areas, and potentially even along specific lines.'
+#| label: fig-loc-map
+#| fig-cap: 'A map of bus station usage by location, using our cross-referenced location dataset. While this dataset was not reliable enough to be used in the models constructed for this project, it can be used to show that high-usage stations are clustered in specific areas, and potentially even along specific lines.'
 ggplot() + 
   geom_sf(data=orwa, fill=NA) + 
   #geom_sf(data=pdx_pop_gg, aes(fill=estimate))+
@@ -146,13 +147,19 @@ ggplot() +
     title='Bus Station Usage by Location', 
     subtitle='Made Using Location Data Subset',
     caption = 'Data from TriMet and OpenStreetMap'
+  ) + 
+  theme(
+    axis.title.x = element_blank(), 
+    axis.title.y = element_blank()
   )
   
 ```
 
-In the later stages of our analysis, we found that there is in fact a way to extract TriMet stop locations from the maps provided on the TriMet website. It was too involved to be able to webscrape within the time restrictions of this project, but we manually extracted the locations of the 5 MAX and bus stations with the highest and lowest usage, resulting in a dataset of 20 stations with location information. This dataset was combined with population information retrieved from the 2024 American Community Survey to produce Figure X. It can be seen that population has an effect on transit usage as well: the cluster of stations in the bottom left of Figure X at the Clackamas Town Center are very near a high-population area. It can also be seen that most of the lowest-usage bus stations are clustered together in a relatively low-population census tract. Additionally, two of the highest-usage MAX stations are close together in the Portland downtown. Figure X provides a compelling argument for the inclusion of location and neighborhood context data in any future investigation of this topic. 
+In the later stages of our analysis, we found that there is in fact a way to extract TriMet stop locations from the maps provided on the TriMet website. It was too involved to be able to webscrape within the time restrictions of this project, but we manually extracted the locations of the 5 MAX and bus stations with the highest and lowest usage, resulting in a dataset of 20 stations with location information. This dataset was combined with population information retrieved from the 2024 American Community Survey [@acs] to produce @fig-loc-pop. It can be seen that population has an effect on transit usage as well: the cluster of stations in the bottom left of @fig-loc-pop at the Clackamas Town Center are very near a high-population area. It can also be seen that most of the lowest-usage bus stations are clustered together in a relatively low-population census tract. Additionally, two of the highest-usage MAX stations are close together in the Portland downtown. @fig-loc-pop provides a compelling argument for the inclusion of location and neighborhood context data in any future investigation of this topic. 
 
 ```{r, echo=F}
+#| label: fig-loc-pop
+#| fig-cap: 'The top 5 highest and lowest-usage MAX stations (circles) and bus stations (triangles), overlaid on cencus tract population estimates from the 2024 ACS. The clusters of high- and low-usage stations provide a compelling argument for location (and other neighborhood information) as a predictor for usage.'
 ggplot() + 
   geom_sf(data=orwa, fill='lightblue') + 
   geom_sf(data=pdx_pop_gg, aes(fill=estimate))+
@@ -188,7 +195,10 @@ ggplot() +
     title = 'Highest and Lowest 5 Bus and MAX Station Usage by Location', 
     subtitle='Compare to Census Tract Populations'
   ) + 
-  theme(legend.direction='horizontal', legend.box='vertical')
+  theme(legend.direction='horizontal', legend.box='vertical', 
+        axis.title.x = element_blank(), 
+      axis.title.y = element_blank()
+        )
   
 ```
 
