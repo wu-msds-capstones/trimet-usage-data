@@ -30,7 +30,7 @@ Information about TriMet schedules was, however, slightly more complicated. Sche
 
 The data was organized into four tables: stations, routes, schedule, and usage. Even though the schedules and usage were already separated, we needed to ensure that the route names, station names, and station ids all matched between files. For these reasons, we used an R script to prepare the data for ingestion into the Postgres database. The output was another four csv files that would each correspond to one of the database tables and could be copied in directly. Below (@fig-erd) is an Entity Relationship Diagram showing our database organization:
 
-![Entity Relationship Diagram for the database constructed in this project.](erd.png){fig-erd}
+![Entity Relationship Diagram for the database constructed in this project.](erd.png){#fig-erd}
 
 Stations and routes each have their own table, and are connected by two junction tables, schedule and usage. Each route is defined as a series of stations going a specific direction on a specific day. The usage table gives a total usage statistic for a specific station on a specific route. Alternatively, you can use the usage_id to select a station-route combination. This is useful within the schedule table, where the same route_id and station_id can have multiple arrival times in a schedule. This ensures third normal form because each table has a primary key and each non-key attribute depends solely on the key.
 
