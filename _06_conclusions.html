@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.7.33">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -30,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="_06_conclusions_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="_06_conclusions_files/libs/quarto-html/anchor.min.js"></script>
 <link href="_06_conclusions_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="_06_conclusions_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="_06_conclusions_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="_06_conclusions_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="_06_conclusions_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="_06_conclusions_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -51,7 +51,7 @@ ul.task-list li input[type="checkbox"] {
 <h1>Conclusions</h1>
 <p>Over the course of this project, we went through the data collection and engineering process as well as modeling usage using statistical and machine learning-based regressions. Two types of data were collected from the TriMet website: usage information by station for Spring 2025, and schedule information for each station. These values were uploaded into a database, as well as transformed into a number of features for use in predicting the usage value of a station.</p>
 <p>We experimented with multiple Poisson regression models, but ultimately weren’t able to generate accurate predictions. Plotting usage against predicted usage shows a scatterplot of points randomly spread on either side of the y=x diagonal line. Additionally, the summary of the model shows that each variable has negligible effects on usage. It’s possible that a different statistical model should be used, but more likely that the features we created are simply not good predictors of usage.</p>
-<p>A number of random forest models were used to predict usage, at a number of scales. Usage was predicted over the full dataset, as well as for several categories: MAX stations, low-usage bus stations, medium-usage bus stations, and high-usage bus stations. Of these models, the one trained on the full dataset had the highest metrics, with an R^2 value during training of [FINAL VALUE]. The models trained on smaller proportions of the dataset performed worse than this full model, while the low-usage bus station model was comparable, due to its status as containing the majority of the data in the dataset. However, with a test RMSE value of [80-ISH, GET FINAL VALUE], even the highest-performing model does not make a good predictor for a dataset with a mean of 30.</p>
+<p>[TALK ABOUT THE MACHINE LEARNING MODELS]</p>
 <section id="future-work" class="level2">
 <h2 class="anchored" data-anchor-id="future-work">Future Work</h2>
 <p>In some ways, the fact that schedule information alone is not particularly predictive of usage is not a surprising discovery. Future work done on this problem would benefit highly from the inclusion of accurate location data for each station stop, which was unfortunately not easily available within the timeframe of this project. Potential inclusions beyond merely location data could be information that provides context to the neighborhood the station is in: how many people live within a certain radius, is this station part of a transit center or not, is there parking available nearby? and other possible questions that would allow for a holistic understanding of the station, rather than merely focusing on the schedule as set up by TriMet.</p>

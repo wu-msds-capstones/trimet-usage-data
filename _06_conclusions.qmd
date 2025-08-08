@@ -146,6 +146,10 @@ ggplot() +
     title='Bus Station Usage by Location', 
     subtitle='Made Using Location Data Subset',
     caption = 'Data from TriMet and OpenStreetMap'
+  ) + 
+  theme(
+    axis.title.x = element_blank(), 
+    axis.title.y = element_blank()
   )
   
 ```
@@ -188,7 +192,10 @@ ggplot() +
     title = 'Highest and Lowest 5 Bus and MAX Station Usage by Location', 
     subtitle='Compare to Census Tract Populations'
   ) + 
-  theme(legend.direction='horizontal', legend.box='vertical')
+  theme(legend.direction='horizontal', legend.box='vertical', 
+        axis.title.x = element_blank(), 
+      axis.title.y = element_blank()
+        )
   
 ```
 
