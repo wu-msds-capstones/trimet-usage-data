@@ -159,7 +159,7 @@ In the later stages of our analysis, we found that there is in fact a way to ext
 
 ```{r, echo=F}
 #| label: fig-loc-pop
-#| fig-cap: 'The top 5 highest and lowest-usage MAX stations (circles) and bus stations (triangles), overlaid on cencus tract population estimates from the 2024 ACS. The clusters of high- and low-usage stations provide a compelling argument for location (and other neighborhood information) as a predictor for usage.'
+#| fig-cap: 'The top 5 highest and lowest-usage MAX stations (circles) and bus stations (triangles), overlaid on census tract population estimates from the 2024 ACS. The clusters of high- and low-usage stations provide a compelling argument for location (and other neighborhood information) as a predictor for usage.'
 ggplot() + 
   geom_sf(data=orwa, fill='lightblue') + 
   geom_sf(data=pdx_pop_gg, aes(fill=estimate))+

@@ -52,7 +52,8 @@ ggplot(data=stop_features_plot, aes(x=arrival_diff, fill=stop_type)) +
 This illustrates just one of many ethical considerations that must be taken into account when designing a transit system–or even simply running one, as TriMet is doing. It also goes some way in explaining why many TriMet stations see as little usage as they do. 
 
 ## Statistical Modeling 
-We first decided to use a Poisson statistical model for our data. Poisson is useful for predicting the number of events within a time interval, which we will use to predict the usage of Trimet stations. However, we also have heavily skewed usage data. This is an issue, since Poisson assumes equidispersion: a condition where the mean and variance must be identical. Therefore, we use the Quasi-Poisson model, which accounts for overdispersion by using a dispersion parameter to adjust the variance and standard error. The overall performance can seen below, in @fig-stats-full, where the actual usages of stations are plotted against the model's predicted usage.
+
+The overall performance of our Quasi-Poisson model can seen below, in @fig-stats-full, where the actual usages of stations are plotted against the model's predicted usage.
 
 ```{r, echo=F}
 #| label: fig-stats-full
@@ -75,9 +76,11 @@ stats_full_plot = ggplot(stats_full) +
 
 stats_full_plot
 ```
-This model uses the following features: Number of routes, earliest arrival, latest arrival, average arrival difference, and day (whether a weekend or weekday). We also used whether the station was a MAX Line or not as an interaction variable, interacting with each of the other features. We found that this had the best performance, but the interaction coefficients had some of the highest standard errors and p-values. Therefore, we eventually decided to partition our dataset and create two separate statistical models. However, one insight we gained from this model was from the interaction between the number of routes and whether the station was a MAX line. We found, with a p-value of 0.003, that we can expect the number of routes to be on average 15% less for MAX lines. 
 
-As you can see in @fig-stats-max, the model using only MAX lines performed somewhat poorly. The MAX lines have higher and more variant usage values, as well a lower number of data points (360 compared to the other partition's 9,043). Unfortunately, we we aren't able to make any statistically significant inferences from the coefficients of this model.
+One insight we gained from this model was from the interaction between the number of routes and whether the station was a MAX line. We found, with a p-value of 0.003, that we can expect the number of routes to be on average 15% less for MAX lines. 
+
+As you can see in @fig-stats-max, the model using only MAX lines performed somewhat poorly. The MAX lines have higher and more variant usage values, as well a lower number of data points (360 compared to the other partition's 9,043). Unfortunately, we we aren't able to make any statistically significant inferences from the coefficients of this model due to large p-values.
+
 ```{r, echo=F}
 #| label: fig-stats-max
 #| fig-cap: 'Quasi-Poisson model performance on MAX lines only.'
@@ -99,7 +102,9 @@ stats_max_plot = ggplot(stats_max) +
 
 stats_max_plot
 ```
+
 Next, the model without any MAX lines shows promise (pictured below in @fig-stats-nomax). With a larger number of data points, each of the coefficients of the model were found to be statistically significant. According to the model, we should expect the usage of a station to increase by 20.2% with each additional route that visits the station. Each station should also expect around 17% less usage on the weekends. Finally, with each additional minute added to the average difference between arrivals to a station, we should expect the usage to drop by 5%.
+
 ```{r, echo=F}
 #| label: fig-stats-nomax
 #| fig-cap: 'Quasi-Poisson model performance, excluding MAX lines.'
@@ -121,6 +126,7 @@ stats_nomax_plot = ggplot(stats_nomax) +
 
 stats_nomax_plot
 ```
+
 Each of these models seems to struggle with placing certain stations, predicting the usage to be much lower than the actual usage. These outliers are typically stations with a low number of routes, but a high usage nevertheless. A large number of these are MAX lines, but there are still many large outliers, even in the partition excluding MAX lines. This is most likely caused by an overreliance of our models on the number of routes feature. In the future, our models could be improved by including more explanatory features.
 
 ## Machine Learning 

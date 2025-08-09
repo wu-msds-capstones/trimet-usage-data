@@ -1,8 +1,8 @@
 # Introduction
 
-Portland is rated one of the most walkable cities in the United States. However, the United States has famously worse walkability and public transit than many other developed countries. Namely, Japan and the Netherlands have state-of-the-art public transportation systems. To better understand how we could improve public transit in Portland, we explored Trimet data. We wanted to use data science to answer the question, "What qualities of TriMet transit stops and routes affect their usage numbers?" In understanding the factors behind station and route usage, we should be able to uncover potential locations for new stations.
+Portland is rated one of the most walkable cities in the United States. However, the United States has famously worse walkability and public transit than many other developed countries. Namely, Japan and the Netherlands have state-of-the-art public transportation systems. To better understand how we could improve public transit in Portland, we explored TriMet data. We wanted to use data science to answer the question, "What qualities of TriMet transit stops and routes affect their usage numbers?" In understanding the factors behind station and route usage, we should be able to uncover potential locations for new stations.
 
-In this paper, we will gather, transform, and organize publicly available Trimet data. We will perform both statistics and machine learning to answer our question and explore the data.
+In this paper, we will gather, transform, and organize publicly available TriMet data. We will perform both statistics and machine learning to answer our question and explore the data.
 
 ### A Note on Terminology 
 

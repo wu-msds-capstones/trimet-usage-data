@@ -6,6 +6,7 @@ authors:
   - Denton Kunz
 bibliography: references.bib
 title-block-banner: true
+number-sections: true
 format: 
   html:
     theme:
