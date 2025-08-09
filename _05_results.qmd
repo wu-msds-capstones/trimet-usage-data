@@ -2,6 +2,11 @@
 library(tidyverse)
 library(cowplot)
 ```
+```{r, echo=F, include=F}
+stats_full = read_csv('data/stats_full.csv')
+stats_max = read_csv('data/stats_max.csv')
+stats_nomax = read_csv('data/stats_nomax.csv')
+```
 
 ```{r, echo=F, include=F}
 rf_data = read_csv('data/rf data.csv')
@@ -48,10 +53,81 @@ This illustrates just one of many ethical considerations that must be taken into
 
 ## Statistical Modeling 
 
-We first created a model with all of our available features: Number of routes, number of arrivals, earliest arrival, latest arrival, average arrival difference, and day. The summary of the model shows that many of these features have negligible effects on the response variable. Since the poisson regression logs the data by default, we take the exponent of our summary statistics to interpret the data. The most salient feature was day, which tells us that usage can be expected to drop by around 8% on weekends. 
+The overall performance of our Quasi-Poisson model can seen below, in @fig-stats-full, where the actual usages of stations are plotted against the model's predicted usage.
 
-Another model uses only the number of routes feature. This performed only slightly better. The summary shows that with each additional route to a particular station, we can expect the usage to increase by roughly 50%. However, after checking the validity of this through exploratory data analysis, we aren’t confident in the model’s accuracy. The majority of stations have less than five routes and the highest usage numbers are recorded there. 
+```{r, echo=F}
+#| label: fig-stats-full
+#| fig-cap: 'Quasi-Poisson model performance on the entirety of our feature dataset.'
+stats_full_plot = ggplot(stats_full) + 
+  geom_point(aes(x=usage, y=pred, alpha=0.5)) + 
+  geom_line(aes(x=usage, y=usage), colour='blue') + 
+  #xlab('real')+ 
+  #ylab('predicted') + 
+  theme_bw() + 
+  labs(
+    title = 'Predicted vs Actual Usages',
+    x = 'Actual Usage', 
+    y = 'Predicted Usage', 
+    caption = 'Data from Trimet'
+  ) + 
+  theme(
+    legend.position='none'
+  )
 
+stats_full_plot
+```
+
+One insight we gained from this model was from the interaction between the number of routes and whether the station was a MAX line. We found, with a p-value of 0.003, that we can expect the number of routes to be on average 15% less for MAX lines. 
+
+As you can see in @fig-stats-max, the model using only MAX lines performed somewhat poorly. The MAX lines have higher and more variant usage values, as well a lower number of data points (360 compared to the other partition's 9,043). Unfortunately, we we aren't able to make any statistically significant inferences from the coefficients of this model due to large p-values.
+
+```{r, echo=F}
+#| label: fig-stats-max
+#| fig-cap: 'Quasi-Poisson model performance on MAX lines only.'
+stats_max_plot = ggplot(stats_max) + 
+  geom_point(aes(x=usage, y=pred, alpha=0.5)) + 
+  geom_line(aes(x=usage, y=usage), colour='blue') + 
+  #xlab('real')+ 
+  #ylab('predicted') + 
+  theme_bw() + 
+  labs(
+    title = 'Predicted vs Actual Usages',
+    x = 'Actual Usage', 
+    y = 'Predicted Usage', 
+    caption = 'Data from Trimet'
+  ) + 
+  theme(
+    legend.position='none'
+  )
+
+stats_max_plot
+```
+
+Next, the model without any MAX lines shows promise (pictured below in @fig-stats-nomax). With a larger number of data points, each of the coefficients of the model were found to be statistically significant. According to the model, we should expect the usage of a station to increase by 20.2% with each additional route that visits the station. Each station should also expect around 17% less usage on the weekends. Finally, with each additional minute added to the average difference between arrivals to a station, we should expect the usage to drop by 5%.
+
+```{r, echo=F}
+#| label: fig-stats-nomax
+#| fig-cap: 'Quasi-Poisson model performance, excluding MAX lines.'
+stats_nomax_plot = ggplot(stats_nomax) + 
+  geom_point(aes(x=usage, y=pred, alpha=0.5)) + 
+  geom_line(aes(x=usage, y=usage), colour='blue') + 
+  #xlab('real')+ 
+  #ylab('predicted') + 
+  theme_bw() + 
+  labs(
+    title = 'Predicted vs Actual Usages',
+    x = 'Actual Usage', 
+    y = 'Predicted Usage', 
+    caption = 'Data from Trimet'
+  ) + 
+  theme(
+    legend.position='none'
+  )
+
+stats_nomax_plot
+```
+
+Each of these models seems to struggle with placing certain stations, predicting the usage to be much lower than the actual usage. These outliers are typically stations with a low number of routes, but a high usage nevertheless. A large number of these are MAX lines, but there are still many large outliers, even in the partition excluding MAX lines. This is most likely caused by an overreliance of our models on the number of routes feature. In the future, our models could be improved by including more explanatory features.
 
 ## Machine Learning 
 
