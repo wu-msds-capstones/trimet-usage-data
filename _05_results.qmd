@@ -77,7 +77,7 @@ stats_full_plot = ggplot(stats_full) +
 stats_full_plot
 ```
 
-One insight we gained from this model was from the interaction between the number of routes and whether the station was a MAX line. We found, with a p-value of 0.003, that we can expect the number of routes to be on average 15% less for MAX lines. 
+One insight we gained from this model, with a p-value of 0.003, was from the interaction between the number of routes and whether the station was a MAX line. For each additional route added to a MAX station, the usage increases by 15% less than when a route is added to a non-MAX station. 
 
 As you can see in @fig-stats-max, the model using only MAX lines performed somewhat poorly. The MAX lines have higher and more variant usage values, as well a lower number of data points (360 compared to the other partition's 9,043). Unfortunately, we we aren't able to make any statistically significant inferences from the coefficients of this model due to large p-values.
 
