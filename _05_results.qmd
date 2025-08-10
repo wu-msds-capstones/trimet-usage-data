@@ -38,7 +38,7 @@ ggplot(data=stop_features_plot, aes(x=arrival_diff, fill=stop_type)) +
     title='Average Difference between Arrival Times, by Station Type', 
     legend.title='Station Type', 
     x='Number of Minutes between Arrivals', 
-    caption='Data from Trimet', 
+    caption='Data from TriMet', 
     fill='Station Type'
   ) + 
   theme(
@@ -68,7 +68,7 @@ stats_full_plot = ggplot(stats_full) +
     title = 'Predicted vs Actual Usages',
     x = 'Actual Usage', 
     y = 'Predicted Usage', 
-    caption = 'Data from Trimet'
+    caption = 'Data from TriMet'
   ) + 
   theme(
     legend.position='none'
@@ -91,10 +91,10 @@ stats_max_plot = ggplot(stats_max) +
   #ylab('predicted') + 
   theme_bw() + 
   labs(
-    title = 'Predicted vs Actual Usages',
+    title = 'MAX Line Quasi-Poisson Predicted vs Actual Usages',
     x = 'Actual Usage', 
     y = 'Predicted Usage', 
-    caption = 'Data from Trimet'
+    caption = 'Data from TriMet'
   ) + 
   theme(
     legend.position='none'
@@ -115,10 +115,10 @@ stats_nomax_plot = ggplot(stats_nomax) +
   #ylab('predicted') + 
   theme_bw() + 
   labs(
-    title = 'Predicted vs Actual Usages',
+    title = 'Non-MAX Station Quasi-Poisson Predicted vs Actual Usages',
     x = 'Actual Usage', 
     y = 'Predicted Usage', 
-    caption = 'Data from Trimet'
+    caption = 'Data from TriMet'
   ) + 
   theme(
     legend.position='none'
@@ -143,10 +143,10 @@ rf_plot = ggplot(rf_data) +
   #ylab('predicted') + 
   theme_bw() + 
   labs(
-    title = 'Predicted vs Test Usages',
+    title = 'Random Forest Predicted vs Test Usages',
     x = 'Log-transformed Test Usage', 
-    y = 'Predicted Usage', 
-    caption = 'Data from Trimet'
+    y = 'Predicted Log-transformed Usage', 
+    caption = 'Data from TriMet'
   ) + 
   theme(
     legend.position='none'
@@ -165,19 +165,19 @@ rf_resid = ggplot(rf_data) +
   geom_hline(aes(yintercept = 0), color='blue') + 
   theme_bw() + 
   labs(
-    title = 'Residuals of Regression', 
+    title = 'Residuals of Random Forest Regression', 
     x = 'Log-transformed Test Usage', 
     y = 'Residual (predicted - test)', 
-    caption = 'Data from Trimet'
+    caption = 'Data from TriMet'
   ) 
 
 rf_resid
 ```
 
 ```{r, echo=F}
-# plot_grid(rf_plot, rf_resid ,nrow=1) +
-#   facet_grid() +
-#   theme_minimal()
+plot_grid(rf_plot, rf_resid ,nrow=1) +
+  facet_grid() +
+  theme_minimal()
 ```
 
 Overall, this model is relatively good at finding a ballpark value, but we would prefer to obtain more predictive data before applying it to any particularly meaningful analysis. 

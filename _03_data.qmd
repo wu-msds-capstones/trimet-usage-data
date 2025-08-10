@@ -31,7 +31,7 @@ ggplot(data=stop_features_plot, aes(x=total_usage, fill=stop_type)) +
     legend.title='Station Type', 
     x='Total Usage', 
     y = 'Number of Stations',
-    caption='Data from Trimet', 
+    caption='Data from TriMet', 
     fill='Station Type'
   )+
   scale_fill_manual(values=c('cornflowerblue', 'orange')) +
