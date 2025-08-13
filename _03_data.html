@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.7.33">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -30,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="_03_data_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="_03_data_files/libs/quarto-html/anchor.min.js"></script>
 <link href="_03_data_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="_03_data_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="_03_data_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="_03_data_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="_03_data_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="_03_data_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -49,14 +49,47 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="data" class="level1">
 <h1>Data</h1>
-<p>The final dataset constructed for the analysis done in this project is a combination of the usage and schedule raw data files, described in the next section. It has 10 columns, seven of which are independent variables. The dataset also contains one dependent variable and two descriptors about each station. The unit of interest is a station, so each row in the final table describes a station. Each station stop is described by its ID in the TriMet system as well as the name of the station, which is typically related to its location in some way. Transit centers and street intersections are common name formats. Each station has associated with it a combined usage number across all the routes that stop there, including both onboardings and disembarkings. This usage total acts as our dependent variable. Independent variables engineered from the schedule data (see <em>Feature Engineering</em>) are as follows: number of routes that stop at the station, the earliest and latest arrivals at that station, the number of unique vehicles that arrive at the station over the course of the day, and the average number of minutes between arrivals. These values are calculated for both weekdays and weekend days, since the schedules can vary between weekdays and the weekend. Some routes do not run on the weekends, and thus only have weekday information given. Weekday information has a Boolean day value of 0, and weekend information has a value of 1. A final variable included in our dataset is a Boolean indicator of if a certain station is a MAX station. This was encoded the same way day of the week was: with a 0 for non-MAX stations, and a value of 1 for MAX stations.</p>
-<p>The distribution of usage by station type can be seen in Figure X. There are only 6 WES commuter rail stations in the TriMet system, so they were combined with the bus stations because they have usage numbers in the same range. Many stations in this dataset have low usage numbers: bus and WES station usage has a mean value of 19.52 and a median of 5. This combined category includes 10,859 entries across two day values. MAX stations are a subset of the dataset, consisting of only 367 entries across two days, but tend to have higher usage. The mean usage value of MAX stations is 340.3, and the median is 239.0.</p>
+<p>The final dataset constructed for the analysis done in this project is a combination of the usage and schedule raw data files, described in the next section. It has 10 columns, seven of which are independent variables. The dataset also contains one dependent variable and two descriptors about each station. The unit of interest is a station, so each row in the final table describes a station. Each station stop is described by its ID in the TriMet system as well as the name of the station, which is typically related to its location in some way. Transit centers and street intersections are common name formats. Each station has associated with it a combined usage number across all the routes that stop there, including both onboardings and disembarkings. This usage total acts as our dependent variable. Independent variables engineered from the schedule data (see <strong>?@sec-features</strong>) are as follows: number of routes that stop at the station, the earliest and latest arrivals at that station, the number of unique vehicles that arrive at the station over the course of the day, and the average number of minutes between arrivals. These values are calculated for both weekdays and weekend days, since the schedules can vary between weekdays and the weekend. Some routes do not run on the weekends, and thus only have weekday information given. Weekday information has a Boolean day value of 0, and weekend information has a value of 1. A final variable included in our dataset is a Boolean indicator of if a certain station is a MAX station. This was encoded the same way day of the week was: with a 0 for non-MAX stations, and a value of 1 for MAX stations.</p>
+<p>The distribution of usage by station type can be seen in <a href="#fig-usage-dist" class="quarto-xref">Figure&nbsp;1</a>. There are only 6 WES commuter rail stations in the TriMet system, so they were combined with the bus stations because they have usage numbers in the same range. Many stations in this dataset have low usage numbers: bus and WES station usage has a mean value of 19.52 and a median of 5. This combined category includes 10,859 entries across two day values. MAX stations are a subset of the dataset, consisting of only 367 entries across two days, but tend to have higher usage. The mean usage value of MAX stations is 340.3, and the median is 239.0.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="_03_data_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption>Figure X: Distributions of usage values for each station type. WES and bus stations are combined due to the low number of WES stations in the dataset. Note that the y-axis is <em>not</em> fixed: there are a much smaller number of MAX stations than there are bus stations.</figcaption>
+<div id="fig-usage-dist" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-usage-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="_03_data_files/figure-html/fig-usage-dist-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-usage-dist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Distributions of usage values for each station type. WES and bus stations are combined due to the low number of WES stations in the dataset. Note that the y-axis is <em>not</em> fixed: there are a much smaller number of MAX stations than there are bus stations.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Distributions of our engineered independent variables can be seen in <a href="#fig-numbers" class="quarto-xref">Figure&nbsp;2</a>, <a href="#fig-times" class="quarto-xref">Figure&nbsp;3</a>, and <strong>?@fig-arrival-boxplot</strong>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-numbers" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-numbers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="_03_data_files/figure-html/fig-numbers-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-numbers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Distributions of the number of routes that stop at each station and the number of arrivals at each station, faceted by the two station types in our dataset.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-times" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-times-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="_03_data_files/figure-html/fig-times-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-times-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Distributions of the earliest and latest arrival times at the two station categories in our dataset.
+</figcaption>
 </figure>
 </div>
 </div>

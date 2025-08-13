@@ -48,7 +48,7 @@ ggplot(data=stop_features_plot, aes(x=arrival_diff, fill=stop_type)) +
   scale_fill_manual(values=c('cornflowerblue', 'orange', 'blue3'))
 ```
 
-20 minutes is often considered a reasonable maximum time to wait at a transit stop between arrivals. However, it can be seen in @fig-arrival-boxplot that only the MAX lines run every 15-20 minutes regularly, and that only half of the buses by quartile are 25 minutes or less. The third quartile of the bus and WES commuter rail stations goes up over 60 minutes. More than an hour is a long time to wait at a transit stop. 
+20 minutes is often considered a reasonable maximum time to wait at a transit stop between arrivals [@wait-times]. However, it can be seen in @fig-arrival-boxplot that only the MAX lines run every 15-20 minutes regularly, and that only half of the buses by quartile are 25 minutes or less. The third quartile of the bus and WES commuter rail stations goes up over 60 minutes. More than an hour is a long time to wait at a transit stop. 
 This illustrates just one of many ethical considerations that must be taken into account when designing a transit system–or even simply running one, as TriMet is doing. It also goes some way in explaining why many TriMet stations see as little usage as they do. 
 
 ## Statistical Modeling 
@@ -175,9 +175,9 @@ rf_resid
 ```
 
 ```{r, echo=F}
-plot_grid(rf_plot, rf_resid ,nrow=1) +
-  facet_grid() +
-  theme_minimal()
+# plot_grid(rf_plot, rf_resid ,nrow=1) +
+#   facet_grid() +
+#   theme_minimal()
 ```
 
-Overall, this model is relatively good at finding a ballpark value, but we would prefer to obtain more predictive data before applying it to any particularly meaningful analysis. 
+Overall, this model is relatively good at finding a ballpark value, but we would prefer to obtain more predictive features before applying it to any particularly meaningful analysis. 

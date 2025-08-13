@@ -1,4 +1,4 @@
-# Data
+# Data {#sec-data}
 
 ```{r echo=FALSE, include=FALSE} 
 library(tidyverse)
@@ -37,3 +37,81 @@ ggplot(data=stop_features_plot, aes(x=total_usage, fill=stop_type)) +
   scale_fill_manual(values=c('cornflowerblue', 'orange')) +
   theme(legend.position='none')
 ```
+Distributions of our engineered independent variables can be seen in @fig-numbers, @fig-times, and @fig-arrival-boxplot. 
+
+```{r, echo=F, message=F}
+#| label: fig-numbers
+#| fig-cap: 'Distributions of the number of routes that stop at each station and the number of arrivals at each station, faceted by the two station types in our dataset. Note that the y-axis is *not* fixed: there are a much smaller number of MAX stations than there are bus stations.'
+routes_plot = ggplot(data=stop_features_plot, aes(x=num_routes, fill=stop_type)) + 
+  geom_histogram() +
+  facet_wrap(~stop_type, scales='free')+
+  theme_bw()+ 
+  labs(
+    title='Number of Routes per Station', 
+    legend.title='Station Type', 
+    x='Number of Routes', 
+    y = 'Number of Stations',
+    caption='Data from TriMet', 
+    fill='Station Type'
+  )+
+  scale_fill_manual(values=c('cornflowerblue', 'orange')) +
+  theme(legend.position='none')
+
+arrivals_plot = ggplot(data=stop_features_plot, aes(x=num_arrivals, fill=stop_type)) + 
+  geom_histogram() +
+  facet_wrap(~stop_type, scales='free')+
+  theme_bw()+ 
+  labs(
+    title='Number of Arrivals per Station', 
+    legend.title='Station Type', 
+    x='Number of Arrivals', 
+    y = 'Number of Stations',
+    caption='Data from TriMet', 
+    fill='Station Type'
+  )+
+  scale_fill_manual(values=c('cornflowerblue', 'orange')) +
+  theme(legend.position='none')
+
+plot_grid(routes_plot, arrivals_plot ,nrow=1) +
+  facet_grid() +
+  theme_minimal()
+```
+
+```{r, echo=F, message=F}
+#| label: fig-times
+#| fig-cap: 'Distributions of the earliest and latest arrival times for the two station categories in our dataset. Note that the y-axis is *not* fixed: there are a much smaller number of MAX stations than there are bus stations.'
+earliest_plot = ggplot(data=stop_features_plot, aes(x=earliest, fill=stop_type)) + 
+  geom_histogram() +
+  facet_wrap(~stop_type, scales='free')+
+  theme_bw()+ 
+  labs(
+    title='Earliest Arrivals Distributions', 
+    legend.title='Station Type', 
+    x='Earliest Arrival Time (minutes after midnight)', 
+    y = 'Number of Stations',
+    caption='Data from TriMet', 
+    fill='Station Type'
+  )+
+  scale_fill_manual(values=c('cornflowerblue', 'orange')) +
+  theme(legend.position='none')
+
+latest_plot = ggplot(data=stop_features_plot, aes(x=latest, fill=stop_type)) + 
+  geom_histogram() +
+  facet_wrap(~stop_type, scales='free')+
+  theme_bw()+ 
+  labs(
+    title='Latest Arrivals Distributions', 
+    legend.title='Station Type', 
+    x='Latest Arrival Time (minutes after midnight)', 
+    y = 'Number of Stations',
+    caption='Data from TriMet', 
+    fill='Station Type'
+  )+
+  scale_fill_manual(values=c('cornflowerblue', 'orange')) +
+  theme(legend.position='none')
+
+plot_grid(earliest_plot, latest_plot ,nrow=1) +
+  facet_grid() +
+  theme_minimal()
+```
+
