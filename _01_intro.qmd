@@ -1,9 +1,11 @@
 # Introduction
 
-Portland is rated one of the most walkable cities in the United States. However, the United States has famously worse walkability and public transit than many other developed countries. Namely, Japan and the Netherlands have state-of-the-art public transportation systems. To better understand how we could improve public transit in Portland, we explored TriMet data. We wanted to use data science to answer the question, "What qualities of TriMet transit stops and routes affect their usage numbers?" In understanding the factors behind station and route usage, we should be able to uncover potential locations for new stations.
+According to Portland's public transit agency, TriMet, Portland is the "the 23rd largest U.S. metro area, but the 12th in transit ridership and 9th in ridership per capita" [@trimet_projects]. This is an impressive statistic, and indicates that Portland's public transit system is competitive on the grand scale of public transit in the U.S. Despite this, it can feel difficult to live in Portland without a car, taking only public transit--particularly when compared to the transit systems in other developed countries, such as Japan and the Netherlands. 
 
-In this paper, we will gather, transform, and organize publicly available TriMet data. We will perform both statistics and machine learning to answer our question and explore the data.
+To better understand the challenges of public transit in Portland and how it could be improved, we explored TriMet's data. We aimed to use data science to answer the question: What qualities of TriMet transit stops and routes affect their usage numbers? In understanding what drives station and route usage, we should be able to predict usage of TriMet's stations from these factors. 
 
-### A Note on Terminology 
+Over the course of this analysis, we will gather, transform, and organize publicly available TriMet data. We will perform both statistics and machine learning analyses to explore the data and answer our driving question. 
 
-For clarity throughout this paper, we will define any stop along a route as a “station”. Additionally, each route is defined as a series of stations going a specific direction on a specific day. For example, a series of stations running on a weekday is considered a different route from a series of stations running on the weekend.
+### A Note on Terminology {#sec-terms}
+
+For clarity throughout this report, we will use the term "station" to refer to any stop along a route. For the purposes of this analysis, a route is defined as a series of stations going a specific direction on a specific day. For example, a series of stations running on a weekday is considered a different route from the same series of stations running the same direction on the weekend.
