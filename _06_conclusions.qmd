@@ -126,10 +126,12 @@ We created a number of machine learning models that predicted station usage from
 ## Future Work 
 
 In some ways, it is not a surprise that schedule data alone does not account for all the features driving usage of TriMet stations. Future work done on the question explored in this project would benefit highly from the inclusion of accurate location data for each station stop, which was unfortunately not easily available within the timeframe of this project. Potential features included alongside location data could be those that provide context to the neighborhood the station is located in by answering questions such as: 
-- How many people live within a certain radius? 
-- Is this station part of a transit center? 
-- Is there parking available nearby?
-- How close is this station to frequently-visited areas, such as parks or grocery stores? 
+
+* How many people live within a certain radius? 
+* Is this station part of a transit center? 
+* Is there parking available nearby?
+* How close is this station to frequently-visited areas, such as parks or grocery stores? 
+
 Answers to these questions and others like them would allow for a holistic understanding of the station, rather than focusing on the schedule as set up by TriMet. 
 
 We were able to conduct a small amount of preliminary analysis that indicates location data would be a meaningful predictor in future models. 
@@ -180,7 +182,7 @@ ggplot() +
     ))) + 
   new_scale_fill() + 
   geom_point(data=max_usage, aes(x=long, y=lat, fill=total_usage), shape=21)+ 
-  scale_fill_continuous_sequential('Plasma', name='MAX Usage', guide = guide_colorbar(theme = theme(
+  scale_fill_continuous_sequential('YlOrRd', name='MAX Usage', guide = guide_colorbar(theme = theme(
       legend.direction = "horizontal",
       legend.title.position = "top",
       legend.text.position = "bottom"
@@ -190,7 +192,7 @@ ggplot() +
   ylim(45.4, 45.62) +
   new_scale_fill() + 
   geom_point(data=bus_usage, aes(x=long, y=lat, fill=total_usage), shape=24)+ 
-  scale_fill_continuous_sequential('Viridis', name='Bus Usage' ,guide = guide_colorbar(theme = theme(
+  scale_fill_continuous_sequential('GnBu', name='Bus Usage' ,guide = guide_colorbar(theme = theme(
       legend.direction = "horizontal",
       legend.title.position = "top",
       legend.text.position = "bottom"
