@@ -23,7 +23,7 @@ stop_features_plot = stop_features %>% mutate(
 
 # Results
 
-## Ethics in Action 
+## Ethics in Action {#sec-ethics-graph}
 
 @fig-arrival-boxplot, below, shows the boxplot of minutes between arrival times created to investigate the range of times that could be spent waiting at a transit station. 
 
@@ -48,7 +48,7 @@ ggplot(data=stop_features_plot, aes(x=arrival_diff, fill=stop_type)) +
   scale_fill_manual(values=c('cornflowerblue', 'orange', 'blue3'))
 ```
 
-20 minutes is often considered a reasonable maximum time to wait at a transit stop between arrivals [@wait-times]. However, it can be seen in @fig-arrival-boxplot that only the MAX lines run every 15-20 minutes regularly, and that only half of the buses by quartile are 25 minutes or less. The third quartile of the bus and WES commuter rail stations goes up over 60 minutes. More than an hour is a long time to wait at a transit stop. 
+20 minutes is often considered a reasonable maximum time to wait at a transit stop between arrivals [@wait-times]. However, it can be seen in @fig-arrival-boxplot that only the MAX lines run every 15-20 minutes regularly, and that only half of the buses by quartile are 25 minutes or less. The upper IQR of the bus and WES commuter rail stations goes up over 60 minutes. More than an hour is a long time to wait at a transit stop. 
 This illustrates just one of many ethical considerations that must be taken into account when designing a transit system–or even simply running one, as TriMet is doing. It also goes some way in explaining why many TriMet stations see as little usage as they do. 
 
 ## Statistical Modeling 
@@ -79,7 +79,7 @@ stats_full_plot
 
 One insight we gained from this model, with a p-value of 0.003, was from the interaction between the number of routes and whether the station was a MAX line. For each additional route added to a MAX station, the usage increases by 15% less than when a route is added to a non-MAX station. 
 
-As you can see in @fig-stats-max, the model using only MAX lines performed somewhat poorly. The MAX lines have higher and more variant usage values, as well a lower number of data points (360 compared to the other partition's 9,043). Unfortunately, we we aren't able to make any statistically significant inferences from the coefficients of this model due to large p-values.
+As you can see in @fig-stats-max, the model using only MAX lines performed somewhat poorly. The MAX lines have higher and more varied usage values, as well a lower number of data points: only 360, compared to the other partition's 9,043. Unfortunately, we aren't able to make any statistically significant inferences from the coefficients of this model due to large p-values.
 
 ```{r, echo=F}
 #| label: fig-stats-max
@@ -103,7 +103,7 @@ stats_max_plot = ggplot(stats_max) +
 stats_max_plot
 ```
 
-Next, the model without any MAX lines shows promise (pictured below in @fig-stats-nomax). With a larger number of data points, each of the coefficients of the model were found to be statistically significant. According to the model, we should expect the usage of a station to increase by 20.2% with each additional route that visits the station. Each station should also expect around 17% less usage on the weekends. Finally, with each additional minute added to the average difference between arrivals to a station, we should expect the usage to drop by 5%.
+Finally, the model without any MAX lines shows promise (pictured below in @fig-stats-nomax). With a larger number of data points, each of the coefficients of the model were found to be statistically significant. According to the model, we should expect the usage of a station to increase by 20.2% with each additional route that visits the station. Each station should also expect around 17% less usage on the weekends. Finally, with each additional minute added to the average difference between arrivals to a station, we should expect the usage to drop by 5%.
 
 ```{r, echo=F}
 #| label: fig-stats-nomax
@@ -135,7 +135,7 @@ The results of the final random forest model constructed for this project are sh
 
 ```{r, echo=F}
 #| label: fig-ml
-#| fig-cap: 'Predicted vs test log-usage values for the best model constructed over the course of this project. This model had an RMSE value of 0.689 and an $R^2$ value for 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. The vertical lines show where many usage values were transformed into a single log-usage value.'
+#| fig-cap: 'Predicted vs test log-usage values for the best model constructed over the course of this project. This model had an RMSE value of 0.689 and an $R^2$ value of 0.521. It has a tendency to over-predict at low log-usage values where the data is concentrated, and slightly under-predict at higher log-usage values. The vertical lines show where many usage values were transformed into a single log-usage value.'
 rf_plot = ggplot(rf_data) + 
   geom_point(aes(x=log_usage, y=rf_pred, alpha=0.5)) + 
   geom_line(aes(x=log_usage, y=log_usage), colour='blue') + 
@@ -155,7 +155,7 @@ rf_plot = ggplot(rf_data) +
 rf_plot
 ```
 
-As can be seen distinctly in the residuals of this model (shown in @fig-ml-resid) the random forest has a tendency to over-predict at low log-usage values, where much of the data is concentrated, and under-predict at high log-usage values--though it evens out at very high log-usage values, between 2 and 3. This is likely a result of the log-transform assigning many usage values to a single log-usage value. The vertical lines seen between -2 and 0 are good evidence of this: the model is trying to predict a range of values, but the transform means they're all a single value. 
+As can be seen distinctly in the residuals of this model (shown in @fig-ml-resid) the random forest has a tendency to over-predict at low log-usage values, where much of the data is concentrated, and under-predict at high log-usage values--though it evens out at very high log-usage values, between 2 and 3. This is likely a result of the log-transform assigning many usage values to a single log-usage value. The vertical lines seen between -2 and 0 are good evidence of this: the model is trying to predict a range of values, but the log transformation means they are all the same value. 
 
 ```{r, echo=F}
 #| label: fig-ml-resid
@@ -180,4 +180,4 @@ rf_resid
 #   theme_minimal()
 ```
 
-Overall, this model is relatively good at finding a ballpark value, but we would prefer to obtain more predictive features before applying it to any particularly meaningful analysis. 
+Overall, this model does a good of finding a ballpark value, and explains over 50% of the variance in the data, but we would prefer to obtain more predictive features before applying it to any particularly meaningful analysis. 

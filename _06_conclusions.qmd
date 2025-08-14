@@ -115,17 +115,17 @@ pdx_pop_gg = orwa %>% st_join(pdx_pop)
 
 ## Project Overview
 
-Over the course of this project, we went through the data collection and engineering process as well as modeling usage using statistical and machine learning-based regressions. Two types of data were collected from the TriMet website: usage information by station for Spring 2025, and schedule information for each station. These values were uploaded into a publicly-available database, as well as transformed into a number of features for use in predicting the usage value of a station. 
+Over the course of this project, we went through the data collection and engineering process as well as modeled usage using statistical and machine learning-based regressions. Two types of data were collected from the TriMet website: usage information by station for Spring 2025, and schedule information for each station. These values were uploaded into a publicly-available database, as well as transformed into a number of features that were used in predicting the usage value of a station. 
 
-We used this data to create a number of statistical and machine learning models. From these models, we were able to learn that our features had measurable effects on station usage, and that we could use these features to predict usage with relatively good accuracy. 
+We used this data to create a number of statistical and machine learning models. From these models, we were able to learn that our features had measurable effects on station usage, and that we could use these features to predict usage with relatively high accuracy. 
 
-Our Quasi-Poisson models provided a number of insights into what features have effects on TriMet station usage. We found that a number of our features had positive effects on usage, and a number of them had negative effects on usage. Some of the most salient was the decrease in usage on weekend days, and the fact that adding an additional route to a station increases its usage by 20%. We also discovered that for each minute there is not an arrival at a station, the station's usage drops by about 5%. 
+Our Quasi-Poisson models provided a number of insights into what features have effects on TriMet station usage. We found that a number of our features had positive effects on usage, and a number of them had negative effects on usage. Some of the most salient was the decrease in usage on weekend days, and the fact that adding an additional route to a station increases its usage by 20%. We also discovered that for each additional minute there is not an arrival at a station, the station's usage drops by about 5%. 
 
 We created a number of machine learning models that predicted station usage from the features engineered for this data set. The best model we found, a random forest, had a test RMSE of 0.685 and an $R^2$ value of 0.523. This model is further illustrated in @fig-ml. The model consistently over-predicted values in the low-usage range and under-predicted values in the high-usage range. The low-usage overprediction is likely a result of the log-transform (as can be seen in @fig-ml). Overall, this model can be used to provide estimates, but it would benefit from adding features such as location data to improve prediction accuracy. 
 
 ## Future Work 
 
-In some ways, it is not a surprise that schedule data alone does not account for all the features driving usage of TriMet stations. Future work done on the question explored in this project would benefit highly from the inclusion of accurate location data for each station stop, which was unfortunately not easily available within the timeframe of this project. Potential features included alongside location data could be those that provide context to the neighborhood the station is located in by answering questions such as: 
+In some ways, it is not a surprise that schedule data alone does not account for all the features driving usage of TriMet stations. Future work done on the question explored in this project would benefit highly from the inclusion of accurate location data for each station stop, which was unfortunately not easily available within the timeframe of this project. Potential features included alongside location data could be those that provide context to the area the station is located in by answering questions such as: 
 
 * How many people live within a certain radius? 
 * Is this station part of a transit center? 
@@ -134,9 +134,11 @@ In some ways, it is not a surprise that schedule data alone does not account for
 
 Answers to these questions and others like them would allow for a holistic understanding of the station, rather than focusing on the schedule as set up by TriMet. 
 
+### Location Proof of Concept
+
 We were able to conduct a small amount of preliminary analysis that indicates location data would be a meaningful predictor in future models. 
 
-Another capstone group kindly allowed us to use their data that provides coordinates of intersections in downtown Portland, which we were able to use to cross-reference our stations with names that followed the "Street Name & Street Name" format. There were 4,706 stations with names in this format that overlapped with the reference table we had access to. Unfortunately, the cross-referencing strategy used was particularly reliable, and as such stations were not always assigned the correct coordinates. This particular location dataset had minimal, if any, effect on models trained using it alongside our engineered features. However, we were able to use this location data to produce @fig-loc-map, below, which shows that high-usage stations are often clustered together. This leads us to believe that a correctly-gathered location dataset would in fact make a good predictor in future models. 
+Another capstone group kindly allowed us to use their data that provides coordinates for intersections in downtown Portland, which we cross-referenced with our stations that had names in "Street Name & Street Name" format. There were 4,706 stations with names in this format that overlapped with the reference table. Unfortunately, the cross-referencing strategy used was not particularly reliable, and as such stations were not always assigned the correct coordinates. This particular location dataset had minimal, if any, effect on models trained using it alongside our engineered features. However, we were able to use this location data to produce @fig-loc-map, below, which shows that high-usage stations are often clustered together. This leads us to believe that a correctly-gathered location dataset would in fact make a good predictor in future models. 
 
 ```{r, echo=F}
 #| label: fig-loc-map
@@ -166,11 +168,11 @@ ggplot() +
   
 ```
 
-In the later stages of our analysis, we found that there is in fact a way to extract TriMet stop locations from the maps provided on the TriMet website. It was too involved to be able to webscrape within the time restrictions of this project, but we manually extracted the locations of the 5 highest- and lowest-usage MAX and bus stations in the TriMet system. This resulted in a dataset of 20 stations with location information. This dataset was combined with census tract population data retrieved from the 2024 American Community Survey [@acs] to produce @fig-loc-pop. It can be seen that population has an effect on transit usage: the cluster of high-usage station of both types in the bottom left of @fig-loc-pop at the Clackamas Town Center are very near a high-population area. It can also be seen that most of the lowest-usage bus stations are clustered together in a relatively low-population census tract, in the north of this map. Additionally, two of the highest-usage MAX stations are close together in the Portland downtown. @fig-loc-pop provides a compelling argument for the inclusion of location and neighborhood context data in any future investigation of this topic. 
+In the later stages of our analysis, we found that there is in fact a way to extract TriMet stop locations from the maps provided on the TriMet website. Accessing this data was too complex to be a feasible webscrape within the time restrictions of this project, but we manually extracted the locations of the 5 highest- and lowest-usage MAX and bus stations in the TriMet system. This resulted in a dataset of 20 stations with location information. This dataset was combined with census tract population data retrieved from the 2024 American Community Survey [@acs] to produce @fig-loc-pop. It can be seen that population has an effect on transit usage: the cluster of high-usage stations of both types in the bottom left of @fig-loc-pop at the Clackamas Town Center are very near to a high-population area. It can also be seen that most of the lowest-usage bus stations are clustered together in a relatively low-population census tract, in the north of this map. Additionally, two of the highest-usage MAX stations are close together in the Portland downtown. @fig-loc-pop provides a compelling argument for the inclusion of location and neighborhood context data in any future investigation of this topic. 
 
 ```{r, echo=F}
 #| label: fig-loc-pop
-#| fig-cap: 'The top 5 highest and lowest-usage MAX stations (circles) and bus stations (triangles), overlaid on census tract population estimates from the 2024 ACS. The clusters of high- and low-usage stations provide a compelling argument for location data and neighborhood population as meaningful predictors for usage.'
+#| fig-cap: 'The top 5 highest- and lowest-usage MAX stations (squares) and bus stations (triangles), overlaid on census tract population estimates from the 2024 ACS. High-usage stations are labelled with their station name. The clusters of high- and low-usage stations provide a compelling argument for location data and neighborhood population as meaningful predictors for usage.'
 ggplot() + 
   geom_sf(data=orwa, fill='lightblue') + 
   geom_sf(data=pdx_pop_gg, aes(fill=estimate))+
@@ -181,7 +183,7 @@ ggplot() +
       #legend.text = element_text(angle = 90)
     ))) + 
   new_scale_fill() + 
-  geom_point(data=max_usage, aes(x=long, y=lat, fill=total_usage), shape=21)+ 
+  geom_point(data=max_usage, aes(x=long, y=lat, fill=total_usage), shape=22)+ 
   scale_fill_continuous_sequential('YlOrRd', name='MAX Usage', guide = guide_colorbar(theme = theme(
       legend.direction = "horizontal",
       legend.title.position = "top",
@@ -216,4 +218,4 @@ ggplot() +
 
 ## In Conclusion
 
-This report provides a high-level analysis of TriMet usage data. We provide a publicly-available database of TriMet usage data by station for Spring 2025, which also includes schedule information for each station. This data was used to engineer a handful of features that were used in statistical models to determine their effect on usage, as well as predict station usage with relatively high accuracy. The database as well and features engineered in this project provide a strong starting point for future work. We believe future work that provides information such as location data and neighborhood context to stations is likely to improve these models' ability to predict TriMet station usage, and be used to determine where a station could be added or which routes should run more often to result in higher usage. 
+This report provides a publicly-available analysis of TriMet usage data. We provide a publicly-available database of TriMet usage data by station for Spring 2025, which also includes schedule information for each station. This data was used to engineer a number of features that were used in statistical models to determine their effect on usage, as well as predict station usage with relatively high accuracy. The database as well as features engineered in this project provide a strong starting point for future work. We believe future work that provides information such as location data and neighborhood context to stations is likely to improve these models' ability to predict TriMet station usage, and be used to determine where a station could be added or which routes should run more often to result in higher usage. 
